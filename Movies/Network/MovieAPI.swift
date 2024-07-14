@@ -54,18 +54,18 @@ struct MovieAPI: MovieAPIProtocol {
     }
     
     private func fetch<T: Codable>(url: URL?, onCompletion: @escaping (_ result: Result<T, Error>) -> Void) {
-        guard let url = url else { return onCompletion(.failure(MovieServiceError.badUrl())) }
+        guard let url = url else { return onCompletion(.failure(MovieServiceError.badUrl)) }
         
         networkSevice.fetchData(for: url) { result in
             switch result {
             case .success(let data):
-                guard let data = data else { return onCompletion(.failure(MovieServiceError.unknown()))}
+                guard let data = data else { return onCompletion(.failure(MovieServiceError.unknown))}
                 
                 do {
                     let response = try JSONDecoder().decode(T.self, from: data)
                     onCompletion(.success(response))
                 } catch {
-                    onCompletion(.failure(MovieServiceError.decodingError()))
+                    onCompletion(.failure(MovieServiceError.decodingError))
                 }
             case .failure(let error):
                 onCompletion(.failure(error))

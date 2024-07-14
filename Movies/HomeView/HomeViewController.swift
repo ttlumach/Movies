@@ -24,9 +24,9 @@ class HomeViewController: UIViewController {
     
     var viewModel: HomeMoviesViewModel = HomeMoviesViewModel()
     
-    var filterButton: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
+    private var filterButton: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
     
-    var spinnerVC = SpinnerViewController()
+    private var spinnerVC = SpinnerViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +38,12 @@ class HomeViewController: UIViewController {
                 self?.tableView.reloadData()
                 self?.stopSpinner()
             }
+        }
+        
+        viewModel.onErrorMessage = { [weak self] error in
+            self?.displayAlert(title: "error",
+                               message: error.localizedDescription,
+                               actions: [UIAlertAction(title: "Ok", style: .cancel)])
         }
     }
     
@@ -70,7 +76,7 @@ class HomeViewController: UIViewController {
         searchController.searchBar.delegate = self
     }
     
-    @objc func presentSortOptions() {
+    @objc private func presentSortOptions() {
         let ascAction = UIAlertAction(title: "Asc", style: .default) { (UIAlertAction) in
             self.sortOptionSelected(.asc)
         }
@@ -88,7 +94,7 @@ class HomeViewController: UIViewController {
         displayAlert(title: "Sort options", message: "Please Select an Option", actions: [ascAction, descAction, noneAction, cancelAction], prefrerredStyle: .actionSheet)
     }
     
-    func sortOptionSelected(_ sortOption: SortState) {
+    private func sortOptionSelected(_ sortOption: SortState) {
         viewModel.filterState = sortOption
         
         switch sortOption {
@@ -101,7 +107,7 @@ class HomeViewController: UIViewController {
         }
     }
     
-    func displayAlert(title: String, message: String, actions: [UIAlertAction]? = nil, prefrerredStyle: UIAlertController.Style = .alert) {
+    private func displayAlert(title: String, message: String, actions: [UIAlertAction]? = nil, prefrerredStyle: UIAlertController.Style = .alert) {
       let alertController = UIAlertController(title: title, message: message, preferredStyle: prefrerredStyle)
       actions?.forEach { action in
         alertController.addAction(action)
@@ -109,14 +115,14 @@ class HomeViewController: UIViewController {
       present(alertController, animated: true)
     }
     
-    func startSpinner() {
+    private func startSpinner() {
         addChild(spinnerVC)
         spinnerVC.view.frame = view.frame
         view.addSubview(spinnerVC.view)
         spinnerVC.didMove(toParent: self)
     }
     
-    func stopSpinner() {
+    private func stopSpinner() {
         spinnerVC.willMove(toParent: nil)
         spinnerVC.view.removeFromSuperview()
         spinnerVC.removeFromParent()
@@ -191,7 +197,7 @@ extension HomeViewController: UISearchResultsUpdating,
 }
 
 class SpinnerViewController: UIViewController {
-    var spinner = UIActivityIndicatorView(style: .large)
+    private var spinner = UIActivityIndicatorView(style: .large)
 
     override func loadView() {
         view = UIView()

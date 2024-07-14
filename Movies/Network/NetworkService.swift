@@ -26,7 +26,7 @@ struct NetworkService: NetworkServiceProtocol {
                     let error = try JSONDecoder().decode(MovieError.self, from: dataResponce.data ?? Data())
                     completionHandler(.failure(.serverError(error)))
                 } catch {
-                    completionHandler(.failure(.unknown()))
+                    completionHandler(.failure(.unknown))
                 }
             }
             completionHandler(.success(dataResponce.data))

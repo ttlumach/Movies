@@ -9,7 +9,20 @@ import Foundation
 
 enum MovieServiceError: Error {
     case serverError(MovieError)
-    case unknown(String = "An unknown error occurred.")
-    case badUrl(String = "Bad URL")
-    case decodingError(String = "Error parsing server response.")
+    case unknown
+    case badUrl
+    case decodingError
+    
+    var localizedDescription: String {
+        switch self {
+        case .unknown:
+            "An unknown error occurred."
+        case .badUrl:
+            "Bad URL"
+        case .decodingError:
+            "Error parsing server response."
+        case .serverError(let error):
+            error.statusMessage
+        }
+    }
 }

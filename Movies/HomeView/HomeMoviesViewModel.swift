@@ -11,7 +11,7 @@ import Nuke
 
 class HomeMoviesViewModel {
     var onMoviesUpdated: (() -> Void)?
-    var onErrorMessage: ((MovieError) -> Void)?
+    var onErrorMessage: ((Error) -> Void)?
     
     private(set) var allMovies: [MovieModel] = [] {
         didSet {
@@ -22,6 +22,7 @@ class HomeMoviesViewModel {
     private(set) var genresDictionary: [Int: String] = [:] // ID: Name
     
     private(set) var filteredMovies: [MovieModel] = []
+    
     var filterState = SortState.none {
         didSet {
             sort(state: filterState)
@@ -44,25 +45,29 @@ class HomeMoviesViewModel {
     }
     
     func fetchMovies() {
-        api.fetchMoviesbyPage(page: currentPage) { [weak self] resp in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                if case let .success(response) = resp {
-                    self?.allMovies.append(contentsOf: response.results)
-                    self?.lastPage = response.totalPages
-                    self?.sort(state: self?.filterState ?? .none)
-                    self?.currentPage += 1
-                }
+        api.fetchMoviesbyPage(page: currentPage) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.allMovies.append(contentsOf: response.results)
+                self?.lastPage = response.totalPages
+                self?.sort(state: self?.filterState ?? .none)
+                self?.currentPage += 1
+            case .failure(let error):
+                self?.onErrorMessage?(error)
             }
         }
     }
     
     private func fetchGenres() {
-        api.fetchGenres() { response in
-            if case let .success(genresResponse) = response {
-                let genres = genresResponse.genres
+        api.fetchGenres() { [weak self] result in
+            switch result {
+            case .success(let response):
+                let genres = response.genres
                 for genre in genres {
-                    self.genresDictionary[genre.id] = genre.name
+                    self?.genresDictionary[genre.id] = genre.name
                 }
+            case .failure(let error):
+                self?.onErrorMessage?(error)
             }
         }
     }

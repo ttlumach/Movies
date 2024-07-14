@@ -71,7 +71,8 @@ class MovieAdditionalDetailsVC: UIViewController {
         view.addSubview(overviewLabel)
         overviewLabel.snp.makeConstraints { make in
             make.top.equalTo(trailerButton.snp.bottom).offset(20)
-            make.trailing.leading.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
         }
     }
     

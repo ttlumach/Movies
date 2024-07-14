@@ -9,11 +9,7 @@ import Foundation
 import UIKit
 import Nuke
 
-enum MovieError: Error {
-    case error
-}
-
-class MoviesViewModel {
+class HomeMoviesViewModel {
     var onMoviesUpdated: (() -> Void)?
     var onErrorMessage: ((MovieError) -> Void)?
     
@@ -32,7 +28,7 @@ class MoviesViewModel {
         }
     }
     
-    private let api: MovieAPI = MovieAPI()
+    private let api: MovieAPIProtocol = MovieAPI()
     private var currentPage = 1
     private var lastPage = 1
     
@@ -42,12 +38,13 @@ class MoviesViewModel {
     }
     
     private func sort(state: SortState) {
-        allMovies.sort { filterState == .asc ? $0.title < $1.title  : $0.title > $1.title }
-        filteredMovies.sort { filterState == .asc ? $0.title < $1.title  : $0.title > $1.title }
+        guard state != .none else { return }
+        allMovies.sort { state == .asc ? $0.title < $1.title  : $0.title > $1.title }
+        filteredMovies.sort { state == .asc ? $0.title < $1.title  : $0.title > $1.title }
     }
     
     func fetchMovies() {
-        api.fetchMoviesbyPage(page: 1) { [weak self] resp in
+        api.fetchMoviesbyPage(page: currentPage) { [weak self] resp in
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 if case let .success(response) = resp {
                     self?.allMovies.append(contentsOf: response.results)
@@ -71,7 +68,7 @@ class MoviesViewModel {
     }
 }
 
-extension MoviesViewModel {
+extension HomeMoviesViewModel {
     
     public func inSearchMode(_ searchController: UISearchController) -> Bool {
         let isActive = searchController.isActive

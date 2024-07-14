@@ -20,7 +20,7 @@ class HomeTableViewCell: UITableViewCell {
     @IBOutlet var genresStaticLabel: UILabel!
     @IBOutlet var ratingStaticLabel: UILabel!
     
-    private var viewModel: HomeTableViewCellViewModel?
+    private var viewModel: MovieViewModel?
     
     private lazy var allLabels: [UILabel?] = {
         [titleLabel,
@@ -36,7 +36,7 @@ class HomeTableViewCell: UITableViewCell {
         movieImageView.addOverlay()
     }
     
-    func setupWithViewModel(_ viewModel: HomeTableViewCellViewModel) {
+    func setupWithViewModel(_ viewModel: MovieViewModel) {
         self.viewModel = viewModel
         setupUI()
         setupData()
@@ -64,7 +64,7 @@ class HomeTableViewCell: UITableViewCell {
     }
     
     private func setupImageViewData() {
-        if let url = viewModel?.imageUrl {
+        if let url = viewModel?.smallImageUrl {
             movieImageView.placeholderView = UIActivityIndicatorView()
             movieImageView.priority = .veryHigh
             movieImageView.pipeline = ImagePipeline.shared
@@ -79,6 +79,6 @@ class HomeTableViewCell: UITableViewCell {
         titleLabel.text = viewModel?.title
         yearLabel.text = viewModel?.year
         genresLabel.text = viewModel?.genres
-        ratingLabel.text = String(viewModel?.rating ?? 0)
+        ratingLabel.text = viewModel?.rating
     }
 }

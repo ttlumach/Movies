@@ -22,7 +22,7 @@ class HomeViewController: UIViewController {
         return tv
     }()
     
-    var viewModel: MoviesViewModel = MoviesViewModel()
+    var viewModel: HomeMoviesViewModel = HomeMoviesViewModel()
     
     var filterButton: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
     
@@ -151,8 +151,9 @@ extension HomeViewController: UITableViewDataSource {
         let inSearchMode = self.viewModel.inSearchMode(searchController)
         let movie = inSearchMode ? self.viewModel.filteredMovies[indexPath.row] : self.viewModel.allMovies[indexPath.row]
         
-        let cellViewModel = HomeTableViewCellViewModel(movie: movie, genresDictionary: viewModel.genresDictionary)
+        let cellViewModel = MovieViewModel(movie: movie, genresDictionary: viewModel.genresDictionary)
         cell.setupWithViewModel(cellViewModel)
+        cell.selectionStyle = .none
         
         // - for fetch more on scroll
         if let visiblePaths = tableView.indexPathsForVisibleRows,
@@ -163,6 +164,18 @@ extension HomeViewController: UITableViewDataSource {
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let inSearchMode = self.viewModel.inSearchMode(searchController)
+        let movie = inSearchMode ? self.viewModel.filteredMovies[indexPath.row] : self.viewModel.allMovies[indexPath.row]
+        
+        let cellViewModel = MovieViewModel(movie: movie, genresDictionary: viewModel.genresDictionary)
+        
+        let vc = MovieAdditionalDetailsVC()
+        vc.viewModel = cellViewModel
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

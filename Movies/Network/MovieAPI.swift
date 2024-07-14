@@ -8,7 +8,8 @@
 import Foundation
 
 protocol MovieAPIProtocol {
-    
+    func fetchMoviesbyPage(page: Int, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)
+    func fetchGenres(onCompletion: @escaping (_ result: Result<GenreResponse, Error>) -> Void)
 }
 
 enum MovieURL {
@@ -19,7 +20,7 @@ enum MovieURL {
   
     case getImageURL(filePath: String)
     case getSmallImageURL(filePath: String)
-    case getPopularMoviesURL
+    case getPopularMoviesURL(page: Int)
     case getGenresUrl
     
     var url: URL? {
@@ -28,8 +29,8 @@ enum MovieURL {
             URL(string: Self.imageOriginalUrlBase + path)
         case .getSmallImageURL(filePath: let path):
             URL(string: Self.image500UrlBase + path)
-        case .getPopularMoviesURL:
-            URL(string: Self.popularMoviesUrl)
+        case .getPopularMoviesURL(let page):
+            URL(string: Self.popularMoviesUrl + "?page=\(page)")
         case .getGenresUrl:
             URL(string: Self.genreUrl)
         }
@@ -38,33 +39,36 @@ enum MovieURL {
 
 struct MovieAPI: MovieAPIProtocol {
 
-    let networkSevice: NetworkServiceProtocol = NetworkService()
+    private let networkSevice: NetworkServiceProtocol = NetworkService()
 
     func fetchMoviesbyPage(page: Int, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)  {
-        guard let url = MovieURL.getPopularMoviesURL.url else { return }
-        networkSevice.fetchData(for: url) { data in
-            guard let data = data else { return onCompletion(.failure(MovieError.error))}
-            
-            do {
-                let movieResponse = try JSONDecoder().decode(MovieResponse.self, from: data)
-                return onCompletion(.success(movieResponse))
-            } catch let error {
-                return onCompletion(.failure(MovieError.error))
-            }
+        fetch(url: MovieURL.getPopularMoviesURL(page: page).url) { moviesResult in
+            onCompletion(moviesResult)
         }
     }
     
     func fetchGenres(onCompletion: @escaping (_ result: Result<GenreResponse, Error>) -> Void) {
-        guard let url = MovieURL.getGenresUrl.url else { return }
+        fetch(url: MovieURL.getGenresUrl.url) { genresResult in
+            onCompletion(genresResult)
+        }
+    }
+    
+    private func fetch<T: Codable>(url: URL?, onCompletion: @escaping (_ result: Result<T, Error>) -> Void) {
+        guard let url = url else { return onCompletion(.failure(MovieServiceError.badUrl())) }
         
-        networkSevice.fetchData(for: url) { data in
-            guard let data = data else { return onCompletion(.failure(MovieError.error))}
-            
-            do {
-                let genresResponse = try JSONDecoder().decode(GenreResponse.self, from: data)
-                return onCompletion(.success(genresResponse))
-            } catch let error {
-                return onCompletion(.failure(MovieError.error))
+        networkSevice.fetchData(for: url) { result in
+            switch result {
+            case .success(let data):
+                guard let data = data else { return onCompletion(.failure(MovieServiceError.unknown()))}
+                
+                do {
+                    let response = try JSONDecoder().decode(T.self, from: data)
+                    onCompletion(.success(response))
+                } catch {
+                    onCompletion(.failure(MovieServiceError.decodingError()))
+                }
+            case .failure(let error):
+                onCompletion(.failure(error))
             }
         }
     }

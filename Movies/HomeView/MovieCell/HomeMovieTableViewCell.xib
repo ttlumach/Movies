@@ -26,7 +26,7 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Year" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="duI-ut-IkY">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Year" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="duI-ut-IkY">
                         <rect key="frame" x="324" y="20" width="34" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
@@ -68,6 +68,8 @@
                     <constraint firstItem="5cE-YQ-c1M" firstAttribute="top" secondItem="usM-WV-YxC" secondAttribute="top" constant="10" id="NQB-OC-RSF"/>
                     <constraint firstItem="OsT-TN-0zY" firstAttribute="top" secondItem="nPj-Ni-IyL" secondAttribute="bottom" constant="10" id="Os3-Bi-i6g"/>
                     <constraint firstItem="usM-WV-YxC" firstAttribute="trailingMargin" secondItem="cl0-92-b2T" secondAttribute="trailing" constant="10" id="Qai-wq-exR"/>
+                    <constraint firstItem="duI-ut-IkY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5cE-YQ-c1M" secondAttribute="trailing" constant="10" id="TdN-Ua-3ln"/>
+                    <constraint firstItem="jMr-zU-5ao" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OsT-TN-0zY" secondAttribute="trailing" constant="25" id="Uh2-hS-F0m"/>
                     <constraint firstItem="jMr-zU-5ao" firstAttribute="leading" secondItem="cl0-92-b2T" secondAttribute="leading" id="hfj-sY-SNj"/>
                     <constraint firstItem="OsT-TN-0zY" firstAttribute="leading" secondItem="nPj-Ni-IyL" secondAttribute="leading" id="ick-IV-88U"/>
                     <constraint firstItem="5cE-YQ-c1M" firstAttribute="leading" secondItem="usM-WV-YxC" secondAttribute="leading" constant="10" id="ipy-ry-VC7"/>

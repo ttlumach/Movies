@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct GenreResponse: Codable {
+    var genres: [GenreModel]
+}
+
 struct GenreModel: Codable {
     var id: Int
     var name: String

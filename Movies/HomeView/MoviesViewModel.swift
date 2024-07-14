@@ -41,7 +41,7 @@ class MoviesViewModel {
         fetchGenres()
     }
     
-    func sort(state: SortState) {
+    private func sort(state: SortState) {
         allMovies.sort { filterState == .asc ? $0.title < $1.title  : $0.title > $1.title }
         filteredMovies.sort { filterState == .asc ? $0.title < $1.title  : $0.title > $1.title }
     }
@@ -59,9 +59,10 @@ class MoviesViewModel {
         }
     }
     
-    func fetchGenres() {
-        api.fetchGenres() { responce in
-            if case let .success(genres) = responce {
+    private func fetchGenres() {
+        api.fetchGenres() { response in
+            if case let .success(genresResponse) = response {
+                let genres = genresResponse.genres
                 for genre in genres {
                     self.genresDictionary[genre.id] = genre.name
                 }

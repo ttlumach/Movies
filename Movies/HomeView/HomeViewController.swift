@@ -50,6 +50,7 @@ class HomeViewController: UIViewController {
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = .none
         tableView.snp.makeConstraints { make in
             make.bottom.trailing.top.leading.equalToSuperview()
         }

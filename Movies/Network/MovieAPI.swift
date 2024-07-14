@@ -54,14 +54,14 @@ struct MovieAPI: MovieAPIProtocol {
         }
     }
     
-    func fetchGenres(onCompletion: @escaping (_ result: Result<[GenreModel], Error>) -> Void) {
+    func fetchGenres(onCompletion: @escaping (_ result: Result<GenreResponse, Error>) -> Void) {
         guard let url = MovieURL.getGenresUrl.url else { return }
         
         networkSevice.fetchData(for: url) { data in
             guard let data = data else { return onCompletion(.failure(MovieError.error))}
             
             do {
-                let genresResponse = try JSONDecoder().decode([GenreModel].self, from: data)
+                let genresResponse = try JSONDecoder().decode(GenreResponse.self, from: data)
                 return onCompletion(.success(genresResponse))
             } catch let error {
                 return onCompletion(.failure(MovieError.error))

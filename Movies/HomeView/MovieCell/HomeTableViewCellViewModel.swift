@@ -33,7 +33,7 @@ class HomeTableViewCellViewModel {
     
     var imageUrl: URL? {
         let imagePath = movie.backdropPath ?? movie.posterPath ?? ""
-        return MovieURL.getImageURL(filePath: imagePath).url
+        return MovieURL.getSmallImageURL(filePath: imagePath).url
     }
     
     init(movie: MovieModel, genresDictionary: [Int : String]) {
@@ -42,8 +42,11 @@ class HomeTableViewCellViewModel {
     }
     
     private func getGenreNamesFromIDs(IDs: [Int]) -> String {
-        IDs.reduce("") {
+        var genres = IDs.reduce("") {
             return $0 + ", " + (genresDictionary[$1] ?? "")
         }
+        genres.removeFirst(2) // removes ", " at start
+        
+        return genres
     }
 }

@@ -22,8 +22,18 @@ class HomeTableViewCell: UITableViewCell {
     
     private var viewModel: HomeTableViewCellViewModel?
     
+    private lazy var allLabels: [UILabel?] = {
+        [titleLabel,
+        yearLabel,
+        genresLabel,
+        ratingLabel,
+        genresStaticLabel,
+        ratingStaticLabel]
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        movieImageView.addOverlay()
     }
     
     func setupWithViewModel(_ viewModel: HomeTableViewCellViewModel) {
@@ -33,10 +43,11 @@ class HomeTableViewCell: UITableViewCell {
     }
     
     private func setupUI() {
-        setupTextBackground()
+        setupTextAndBackground()
         
         genresLabel.preferredMaxLayoutWidth = 150
         genresLabel.numberOfLines = 3
+        titleLabel.numberOfLines = 3
         movieImageView.contentMode = .scaleToFill
         movieImageView.layer.shadowColor = UIColor.black.cgColor
         movieImageView.layer.shadowRadius = 6
@@ -45,19 +56,11 @@ class HomeTableViewCell: UITableViewCell {
         movieImageView.layer.masksToBounds = false
     }
     
-    private func setupTextBackground() {
-        setupBackgroungForView(titleLabel)
-        setupBackgroungForView(yearLabel)
-        setupBackgroungForView(genresLabel)
-        setupBackgroungForView(ratingLabel)
-        setupBackgroungForView(ratingStaticLabel)
-        setupBackgroungForView(genresStaticLabel)
-    }
-    
-    private func setupBackgroungForView(_ uiView: UIView) {
-        uiView.layer.cornerRadius = 5
-        uiView.layer.masksToBounds = true
-        uiView.backgroundColor = .white.withAlphaComponent(0.7)
+    private func setupTextAndBackground() {
+        for label in allLabels {
+            label?.textColor = .white
+            label?.font = .boldSystemFont(ofSize: 16)
+        }
     }
     
     private func setupImageViewData() {
@@ -66,8 +69,6 @@ class HomeTableViewCell: UITableViewCell {
             movieImageView.priority = .veryHigh
             movieImageView.pipeline = ImagePipeline.shared
             movieImageView.url = url
-            
-            movieImageView.onCompletion = { _ in print("Request completed") }
         } else {
             movieImageView.imageView.image = viewModel?.defaultImage
         }

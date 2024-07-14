@@ -29,6 +29,7 @@
 		61F021DE2C43C92D00960A62 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 61F021DD2C43C92D00960A62 /* NukeUI */; };
 		61F021E02C43D1B300960A62 /* GenreModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F021DF2C43D1B300960A62 /* GenreModel.swift */; };
 		61F021E22C43D77300960A62 /* HomeTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F021E12C43D77300960A62 /* HomeTableViewCellViewModel.swift */; };
+		61F021E42C43F7F000960A62 /* LazyImageView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F021E32C43F7F000960A62 /* LazyImageView+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		61F021D92C42D80100960A62 /* MovieAdditionalDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieAdditionalDetailsView.swift; sourceTree = "<group>"; };
 		61F021DF2C43D1B300960A62 /* GenreModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreModel.swift; sourceTree = "<group>"; };
 		61F021E12C43D77300960A62 /* HomeTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCellViewModel.swift; sourceTree = "<group>"; };
+		61F021E32C43F7F000960A62 /* LazyImageView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LazyImageView+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				61F021992C36C34700960A62 /* AppDelegate.swift */,
 				61F0219B2C36C34700960A62 /* SceneDelegate.swift */,
 				61F021A22C36C34800960A62 /* Assets.xcassets */,
+				61F021E32C43F7F000960A62 /* LazyImageView+Extensions.swift */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 				61F0219C2C36C34700960A62 /* SceneDelegate.swift in Sources */,
 				61F021CF2C3EF7DC00960A62 /* MovieResponse.swift in Sources */,
 				61F021CB2C3EF73000960A62 /* MoviesViewModel.swift in Sources */,
+				61F021E42C43F7F000960A62 /* LazyImageView+Extensions.swift in Sources */,
 				61F021E02C43D1B300960A62 /* GenreModel.swift in Sources */,
 				61F021BB2C371A7D00960A62 /* HomeTableViewCell.swift in Sources */,
 				61F021D72C3EF9A900960A62 /* NetworkError.swift in Sources */,

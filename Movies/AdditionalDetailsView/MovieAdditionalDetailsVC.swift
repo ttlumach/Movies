@@ -1,5 +1,5 @@
 //
-//  MovieAdditionalDetailsView.swift
+//  MovieAdditionalDetailsVC.swift
 //  Movies
 //
 //  Created by Macbook on 13.07.2024.
@@ -9,6 +9,8 @@ import UIKit
 import NukeUI
 import Nuke
 import SnapKit
+import AVFoundation
+import AVKit
 
 class MovieAdditionalDetailsVC: UIViewController {
     
@@ -27,6 +29,16 @@ class MovieAdditionalDetailsVC: UIViewController {
         setupUI()
         title = viewModel?.title
         view.backgroundColor = .white
+        
+        viewModel?.onTrailerUpdated = { [weak self] in
+            self?.updateTrailerButtonState()
+        }
+        
+        viewModel?.onErrorMessage = { [weak self] error in
+            self?.displayAlert(title: "error",
+                               message: error.localizedDescription,
+                               actions: [UIAlertAction(title: "Ok", style: .cancel)])
+        }
     }
     
     private func setupUI() {
@@ -95,9 +107,14 @@ class MovieAdditionalDetailsVC: UIViewController {
         overviewLabel.numberOfLines = .max
         
         trailerButton.setImage(UIImage(systemName: "play.rectangle")?.withTintColor(.red), for: .normal)
-        //trailerButton.isHidden = viewModel
+        trailerButton.addTarget(self, action: #selector(trailerButtonTapped), for: .touchUpInside)
+        updateTrailerButtonState()
         
         setupImageView()
+    }
+    
+    private func updateTrailerButtonState() {
+        trailerButton.isHidden = viewModel?.trailerUrl == nil
     }
     
     private func setupImageView() {
@@ -117,8 +134,15 @@ class MovieAdditionalDetailsVC: UIViewController {
             movieImageView.imageView.image = viewModel?.defaultImage
         }
     }
-    
-    private func trailerButtonTapped() {
-        
+
+    @objc private func trailerButtonTapped() {
+        guard let url = viewModel?.trailerUrl else {
+            displayAlert(title: "Error", message: MovieServiceError.badUrl.localizedDescription, actions: [UIAlertAction(title: "Ok", style: .cancel)])
+            return
+        }
+
+        let playerVC = YouTubePlayerVC()
+            playerVC.url = url
+            present(playerVC, animated: true, completion: nil)
     }
 }

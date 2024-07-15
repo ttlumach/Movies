@@ -11,6 +11,12 @@ import UIKit
 
 class MovieViewModel {
     private var movie: MovieModel
+    private let api: MovieAPIProtocol = MovieAPI()
+    private let youtubeURLBase = "https://www.youtube.com/watch?v="
+    
+    var onTrailerUpdated: (() -> Void)?
+    var onErrorMessage: ((Error) -> Void)?
+    
     let defaultImage = UIImage(named: "defaultMovieImage")
     
     var genresDictionary: [Int: String] // ID: Name
@@ -53,11 +59,12 @@ class MovieViewModel {
         movie.releaseDate
     }
     
-    
+    var trailerUrl: URL?
     
     init(movie: MovieModel, genresDictionary: [Int : String]) {
         self.movie = movie
         self.genresDictionary = genresDictionary
+        fetchVideo()
     }
     
     private func getGenreNamesFromIDs(IDs: [Int]) -> String {
@@ -79,6 +86,25 @@ class MovieViewModel {
             return String(year)
         } else {
             return nil
+        }
+    }
+    
+    private func fetchVideo() {
+        api.fetchVideos(movieID: movie.id) { [weak self] result in
+            switch result {
+            case .success(let response):
+                let videos = response.results
+                for video in videos {
+                    if video.name.lowercased() == "official trailer" {
+                        self?.trailerUrl = URL(string: (self?.youtubeURLBase ?? "") + video.key)
+                    } else if video.type.lowercased() == "trailer" {
+                        self?.trailerUrl = URL(string: (self?.youtubeURLBase ?? "") + video.key)
+                    }
+                    self?.onTrailerUpdated?()
+                }
+            case .failure(let error):
+                self?.onErrorMessage?(error)
+            }
         }
     }
 }

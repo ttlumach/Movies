@@ -10,18 +10,21 @@ import Foundation
 protocol MovieAPIProtocol {
     func fetchMoviesbyPage(page: Int, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)
     func fetchGenres(onCompletion: @escaping (_ result: Result<GenreResponse, Error>) -> Void)
+    func fetchVideos(movieID: Int, onCompletion: @escaping (_ result: Result<MovieVideoResponse, Error>) -> Void)
 }
 
 enum MovieURL {
-    static private var popularMoviesUrl = "https://api.themoviedb.org/3/movie/popular"
+    static private var popularMoviesUrl = baseUrl + "popular"
     static private var image500UrlBase = "https://image.tmdb.org/t/p/w500"
     static private var imageOriginalUrlBase = "https://image.tmdb.org/t/p/original"
     static private var genreUrl = "https://api.themoviedb.org/3/genre/movie/list"
+    static private var baseUrl = "https://api.themoviedb.org/3/movie/"
   
     case getImageURL(filePath: String)
     case getSmallImageURL(filePath: String)
     case getPopularMoviesURL(page: Int)
     case getGenresUrl
+    case getTrailerUrl(movieID: Int)
     
     var url: URL? {
         switch self {
@@ -33,6 +36,8 @@ enum MovieURL {
             URL(string: Self.popularMoviesUrl + "?page=\(page)")
         case .getGenresUrl:
             URL(string: Self.genreUrl)
+        case .getTrailerUrl(movieID: let id):
+            URL(string: Self.baseUrl + String(id) + "/videos")
         }
     }
 }
@@ -50,6 +55,12 @@ struct MovieAPI: MovieAPIProtocol {
     func fetchGenres(onCompletion: @escaping (_ result: Result<GenreResponse, Error>) -> Void) {
         fetch(url: MovieURL.getGenresUrl.url) { genresResult in
             onCompletion(genresResult)
+        }
+    }
+    
+    func fetchVideos(movieID: Int, onCompletion: @escaping (_ result: Result<MovieVideoResponse, Error>) -> Void) {
+        fetch(url:  MovieURL.getTrailerUrl(movieID: movieID).url) { moviesResult in
+            onCompletion(moviesResult)
         }
     }
     

@@ -66,6 +66,7 @@ class HomeMoviesViewModel {
                 for genre in genres {
                     self?.genresDictionary[genre.id] = genre.name
                 }
+                self?.onMoviesUpdated?()
             case .failure(let error):
                 self?.onErrorMessage?(error)
             }

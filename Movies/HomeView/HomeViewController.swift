@@ -107,14 +107,6 @@ class HomeViewController: UIViewController {
         }
     }
     
-    private func displayAlert(title: String, message: String, actions: [UIAlertAction]? = nil, prefrerredStyle: UIAlertController.Style = .alert) {
-      let alertController = UIAlertController(title: title, message: message, preferredStyle: prefrerredStyle)
-      actions?.forEach { action in
-        alertController.addAction(action)
-      }
-      present(alertController, animated: true)
-    }
-    
     private func startSpinner() {
         addChild(spinnerVC)
         spinnerVC.view.frame = view.frame
@@ -127,7 +119,6 @@ class HomeViewController: UIViewController {
         spinnerVC.view.removeFromSuperview()
         spinnerVC.removeFromParent()
     }
-    
 }
 
 // MARK: - UITableViewDelegate

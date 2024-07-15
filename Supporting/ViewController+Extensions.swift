@@ -9,10 +9,16 @@ import UIKit
 
 extension UIViewController {
     func displayAlert(title: String, message: String, actions: [UIAlertAction]? = nil, prefrerredStyle: UIAlertController.Style = .alert) {
-      let alertController = UIAlertController(title: title, message: message, preferredStyle: prefrerredStyle)
-      actions?.forEach { action in
-        alertController.addAction(action)
-      }
-      present(alertController, animated: true)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: prefrerredStyle)
+        actions?.forEach { action in
+            alertController.addAction(action)
+        }
+        present(alertController, animated: true)
+    }
+    
+    func displayErrorAlert(error: Error) {
+        self.displayAlert(title: "error",
+                          message: error.localizedDescription,
+                          actions: [UIAlertAction(title: "Ok", style: .cancel)])
     }
 }

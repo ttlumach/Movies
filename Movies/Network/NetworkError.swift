@@ -7,8 +7,8 @@
 
 import Foundation
 
-enum MovieServiceError: Error {
-    case serverError(MovieError)
+enum NetworkError: Error {
+    case serverError(MovieResponseError)
     case unknown
     case badUrl
     case decodingError

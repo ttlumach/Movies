@@ -47,6 +47,11 @@ class MovieViewModel {
         return MovieURL.getImageURL(filePath: imagePath).url
     }
     
+    var posterImageUrl: URL? {
+        let imagePath = movie.posterPath ?? ""
+        return MovieURL.getImageURL(filePath: imagePath).url
+    }
+    
     var yearAndCountry: String {
         year + ", " + movie.originalLanguage
     }

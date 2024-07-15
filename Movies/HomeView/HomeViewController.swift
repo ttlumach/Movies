@@ -12,7 +12,7 @@ enum SortState {
     case asc, desc, none
 }
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewControllerWithSpinner {
     
     private let searchController: UISearchController = UISearchController(searchResultsController: nil)
     private let tableView: UITableView = {
@@ -25,8 +25,6 @@ class HomeViewController: UIViewController {
     var viewModel: HomeMoviesViewModel = HomeMoviesViewModel()
     
     private var filterButton: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
-    
-    private var spinnerVC = SpinnerViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,9 +39,8 @@ class HomeViewController: UIViewController {
         }
         
         viewModel.onErrorMessage = { [weak self] error in
-            self?.displayAlert(title: "error",
-                               message: error.localizedDescription,
-                               actions: [UIAlertAction(title: "Ok", style: .cancel)])
+            self?.stopSpinner()
+            self?.displayErrorAlert(error: error)
         }
     }
     
@@ -105,19 +102,6 @@ class HomeViewController: UIViewController {
         case .none:
             filterButton.image = .init(systemName: "menubar.rectangle")?.withTintColor(.black, renderingMode: .alwaysOriginal)
         }
-    }
-    
-    private func startSpinner() {
-        addChild(spinnerVC)
-        spinnerVC.view.frame = view.frame
-        view.addSubview(spinnerVC.view)
-        spinnerVC.didMove(toParent: self)
-    }
-    
-    private func stopSpinner() {
-        spinnerVC.willMove(toParent: nil)
-        spinnerVC.view.removeFromSuperview()
-        spinnerVC.removeFromParent()
     }
 }
 

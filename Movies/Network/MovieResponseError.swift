@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MovieError: Error, Codable {
+struct MovieResponseError: Error, Codable {
     let statusCode: Int
     let statusMessage: String
     let success: Bool

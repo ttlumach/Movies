@@ -12,21 +12,24 @@ import SnapKit
 import AVFoundation
 import AVKit
 
-class MovieAdditionalDetailsVC: UIViewController {
+class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
     
     var viewModel: MovieViewModel?
     
-    var movieImageView = LazyImageView()
-    var titleLabel = UILabel()
-    var releaseDateLabel = UILabel()
-    var genresLabel = UILabel()
-    var ratingLabel = UILabel()
-    var trailerButton = UIButton()
-    var overviewLabel = UILabel()
+    private var movieImageView = LazyImageView()
+    private var titleLabel = UILabel()
+    private var releaseDateLabel = UILabel()
+    private var genresLabel = UILabel()
+    private var ratingLabel = UILabel()
+    private var trailerButton = UIButton()
+    private var overviewLabel = UILabel()
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         setupData()
         setupUI()
+        
         title = viewModel?.title
         view.backgroundColor = .white
         
@@ -35,9 +38,7 @@ class MovieAdditionalDetailsVC: UIViewController {
         }
         
         viewModel?.onErrorMessage = { [weak self] error in
-            self?.displayAlert(title: "error",
-                               message: error.localizedDescription,
-                               actions: [UIAlertAction(title: "Ok", style: .cancel)])
+            self?.displayErrorAlert(error: error)
         }
     }
     
@@ -53,6 +54,7 @@ class MovieAdditionalDetailsVC: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(movieImageView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
         }
         
         view.addSubview(releaseDateLabel)
@@ -90,7 +92,7 @@ class MovieAdditionalDetailsVC: UIViewController {
     
     private func setupData() {
         titleLabel.text = viewModel?.title
-        titleLabel.numberOfLines = 4
+        titleLabel.numberOfLines = 2
         titleLabel.font = .boldSystemFont(ofSize: 30)
         
         releaseDateLabel.text = viewModel?.releaseDate
@@ -128,16 +130,44 @@ class MovieAdditionalDetailsVC: UIViewController {
         if let url = viewModel?.imageUrl {
             movieImageView.placeholderView = UIActivityIndicatorView()
             movieImageView.priority = .veryHigh
-            movieImageView.pipeline = ImagePipeline.shared
+            let imagePipeline = ImagePipeline(configuration: .withDataCache)
+            movieImageView.pipeline = imagePipeline
             movieImageView.url = url
         } else {
             movieImageView.imageView.image = viewModel?.defaultImage
+        }
+        
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tappedOnImage))
+        movieImageView.addGestureRecognizer(gestureRecognizer)
+    }
+    
+    @objc private func tappedOnImage() {
+        guard let url = viewModel?.posterImageUrl else { 
+            displayErrorAlert(error: NetworkError.badUrl)
+            return
+        }
+        
+        Task {
+            do {
+                let imagePipeline = ImagePipeline(configuration: .withDataCache)
+                let vc = FullScreenImageViewController()
+                
+                startSpinner()
+                let image = try await imagePipeline.image(for: url)
+                vc.image = image
+                stopSpinner()
+                
+                self.present(vc, animated: true, completion: nil)
+            } catch let error {
+                displayErrorAlert(error: error)
+            }
+            
         }
     }
 
     @objc private func trailerButtonTapped() {
         guard let url = viewModel?.trailerUrl else {
-            displayAlert(title: "Error", message: MovieServiceError.badUrl.localizedDescription, actions: [UIAlertAction(title: "Ok", style: .cancel)])
+           displayErrorAlert(error:  NetworkError.badUrl)
             return
         }
 

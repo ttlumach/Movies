@@ -67,7 +67,8 @@ class HomeTableViewCell: UITableViewCell {
         if let url = viewModel?.smallImageUrl {
             movieImageView.placeholderView = UIActivityIndicatorView()
             movieImageView.priority = .veryHigh
-            movieImageView.pipeline = ImagePipeline.shared
+            let imagePipeline = ImagePipeline(configuration: .withDataCache)
+            movieImageView.pipeline = imagePipeline
             movieImageView.url = url
         } else {
             movieImageView.imageView.image = viewModel?.defaultImage

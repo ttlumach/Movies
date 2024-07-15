@@ -14,6 +14,7 @@ enum SortState {
 
 class HomeViewController: UIViewControllerWithSpinner {
     
+    private let emptyResultsText = "There are no results for your search query."
     private let searchController: UISearchController = UISearchController(searchResultsController: nil)
     private let tableView: UITableView = {
         let tv = UITableView()
@@ -29,13 +30,9 @@ class HomeViewController: UIViewControllerWithSpinner {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupSearchController()
         
         viewModel.onMoviesUpdated = { [weak self] in
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-                self?.stopSpinner()
-            }
+            self?.handleMoviesUpdate()
         }
         
         viewModel.onErrorMessage = { [weak self] error in
@@ -57,6 +54,8 @@ class HomeViewController: UIViewControllerWithSpinner {
         tableView.snp.makeConstraints { make in
             make.bottom.trailing.top.leading.equalToSuperview()
         }
+        setupRefreshControll()
+        setupSearchController()
     }
     
     private func setupSearchController() {
@@ -71,6 +70,40 @@ class HomeViewController: UIViewControllerWithSpinner {
         
         searchController.delegate = self
         searchController.searchBar.delegate = self
+    }
+    
+    private func setupRefreshControll() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+    }
+    
+    private func handleMoviesUpdate() {
+        DispatchQueue.main.async { [weak self] in
+            guard let sSelf = self else { return }
+            
+            let inSearchMode = sSelf.viewModel.inSearchMode(sSelf.searchController)
+            let tableViewIsEmpty = inSearchMode ? sSelf.viewModel.filteredMovies.isEmpty : sSelf.viewModel.allMovies.isEmpty
+            
+            if tableViewIsEmpty {
+                let label = UILabel(frame: CGRect(x: 0, y: 0, width: sSelf.tableView.bounds.size.width, height: sSelf.tableView.bounds.size.height))
+                label.text = sSelf.emptyResultsText
+                label.textAlignment = .center
+                
+                sSelf.tableView.backgroundView = label
+            } else {
+                sSelf.tableView.backgroundView = nil
+            }
+            sSelf.tableView.reloadData()
+            sSelf.stopSpinner()
+        }
+    }
+    
+    @objc private func refreshData() {
+        Task {
+            await viewModel.refresh()
+            tableView.refreshControl?.endRefreshing()
+        }
     }
     
     @objc private func presentSortOptions() {

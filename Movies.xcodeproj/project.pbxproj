@@ -175,8 +175,6 @@
 			isa = PBXGroup;
 			children = (
 				61F021D92C42D80100960A62 /* MovieAdditionalDetailsVC.swift */,
-				61F021F02C45064100960A62 /* FullScreenImageViewController.swift */,
-				61F021EE2C44F85E00960A62 /* YoutubePlayerVC.swift */,
 			);
 			path = AdditionalDetailsView;
 			sourceTree = "<group>";
@@ -193,6 +191,8 @@
 			isa = PBXGroup;
 			children = (
 				61F021F62C4525E900960A62 /* UIViewControllerWithSpinner.swift */,
+				61F021F02C45064100960A62 /* FullScreenImageViewController.swift */,
+				61F021EE2C44F85E00960A62 /* YoutubePlayerVC.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";

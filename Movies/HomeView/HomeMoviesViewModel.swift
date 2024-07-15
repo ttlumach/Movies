@@ -44,6 +44,20 @@ class HomeMoviesViewModel {
         filteredMovies.sort { state == .asc ? $0.title < $1.title  : $0.title > $1.title }
     }
     
+    func refresh() async {
+        api.fetchMoviesbyPage(page: 1) { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let response):
+                var newItems = response.results.filter { !strongSelf.allMovies.contains($0) }
+                strongSelf.allMovies.insert(contentsOf: newItems, at: 0)
+                self?.sort(state: self?.filterState ?? .none)
+            case .failure(let error):
+                self?.onErrorMessage?(error)
+            }
+        }
+    }
+    
     func fetchMovies() {
         api.fetchMoviesbyPage(page: currentPage) { [weak self] result in
             switch result {

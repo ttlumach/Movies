@@ -161,7 +161,6 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
             } catch let error {
                 displayErrorAlert(error: error)
             }
-            
         }
     }
 

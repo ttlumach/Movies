@@ -17,7 +17,7 @@ extension UIViewController {
     }
     
     func displayErrorAlert(error: Error) {
-        self.displayAlert(title: "error",
+        self.displayAlert(title: "Error",
                           message: error.localizedDescription,
                           actions: [UIAlertAction(title: "Ok", style: .cancel)])
     }

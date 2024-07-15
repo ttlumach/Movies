@@ -12,6 +12,7 @@ enum NetworkError: Error {
     case unknown
     case badUrl
     case decodingError
+    case noInternet
     
     var localizedDescription: String {
         switch self {
@@ -22,7 +23,9 @@ enum NetworkError: Error {
         case .decodingError:
             "Error parsing server response."
         case .serverError(let error):
-            error.statusMessage
+            "Server Error found.\n" + error.statusMessage
+        case .noInternet:
+            "You are offline.\nPlease, enable your Wi-Fi or connect using cellular data."
         }
     }
 }

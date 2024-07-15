@@ -49,7 +49,7 @@ class HomeMoviesViewModel {
             guard let strongSelf = self else { return }
             switch result {
             case .success(let response):
-                var newItems = response.results.filter { !strongSelf.allMovies.contains($0) }
+                let newItems = response.results.filter { !strongSelf.allMovies.contains($0) }
                 strongSelf.allMovies.insert(contentsOf: newItems, at: 0)
                 self?.sort(state: self?.filterState ?? .none)
             case .failure(let error):

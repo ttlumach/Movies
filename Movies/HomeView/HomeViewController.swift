@@ -31,6 +31,7 @@ class HomeViewController: UIViewControllerWithSpinner {
         super.viewDidLoad()
         setupUI()
         
+        viewModel.delegate = self
         viewModel.onMoviesUpdated = { [weak self] in
             self?.handleMoviesUpdate()
         }
@@ -82,8 +83,7 @@ class HomeViewController: UIViewControllerWithSpinner {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             
-            let inSearchMode = sSelf.viewModel.inSearchMode(sSelf.searchController)
-            let tableViewIsEmpty = inSearchMode ? sSelf.viewModel.filteredMovies.isEmpty : sSelf.viewModel.allMovies.isEmpty
+            let tableViewIsEmpty = sSelf.viewModel.filteredMovies.isEmpty
             
             if tableViewIsEmpty {
                 let label = UILabel(frame: CGRect(x: 0, y: 0, width: sSelf.tableView.bounds.size.width, height: sSelf.tableView.bounds.size.height))
@@ -154,26 +154,24 @@ extension HomeViewController: UITableViewDelegate {
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let inSearchMode = self.viewModel.inSearchMode(searchController)
-        return inSearchMode ? self.viewModel.filteredMovies.count : self.viewModel.allMovies.count
+        return self.viewModel.filteredMovies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "HomeMovieTableViewCell", for: indexPath) as? HomeTableViewCell else {
             return UITableViewCell()
         }
-        let inSearchMode = self.viewModel.inSearchMode(searchController)
-        let movie = inSearchMode ? self.viewModel.filteredMovies[indexPath.row] : self.viewModel.allMovies[indexPath.row]
         
+        let movie = self.viewModel.filteredMovies[indexPath.row]
         let cellViewModel = MovieViewModel(movie: movie, genresDictionary: viewModel.genresDictionary)
         cell.setupWithViewModel(cellViewModel)
         cell.selectionStyle = .none
         
         // - for fetch more on scroll
         if let visiblePaths = tableView.indexPathsForVisibleRows,
-           !inSearchMode,
-           visiblePaths.contains([0, viewModel.allMovies.count - 1]) {
-            viewModel.fetchMovies()
+           !inSearchMode(),
+           visiblePaths.contains([0, viewModel.popularMovies.count - 1]) {
+            viewModel.fetchMoviesByPopularity()
             startSpinner()
         }
         
@@ -181,8 +179,7 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let inSearchMode = self.viewModel.inSearchMode(searchController)
-        let movie = inSearchMode ? self.viewModel.filteredMovies[indexPath.row] : self.viewModel.allMovies[indexPath.row]
+        let movie = self.viewModel.filteredMovies[indexPath.row]
         
         let cellViewModel = MovieViewModel(movie: movie, genresDictionary: viewModel.genresDictionary)
         
@@ -197,25 +194,23 @@ extension HomeViewController: UITableViewDataSource {
 
 extension HomeViewController: UISearchResultsUpdating,
                               UISearchControllerDelegate,
-                              UISearchBarDelegate  {
-    
+                              UISearchBarDelegate,
+                              HomeMoviesViewModelDelegate {
     func updateSearchResults(for searchController: UISearchController) {
-        self.viewModel.updateSearchController(searchBarText: searchController.searchBar.text)
+        if searchController.searchBar.text?.isEmpty == true {
+            tableView.reloadData()
+        }
     }
-}
-
-class SpinnerViewController: UIViewController {
-    private var spinner = UIActivityIndicatorView(style: .large)
-
-    override func loadView() {
-        view = UIView()
-        view.backgroundColor = UIColor(white: 1, alpha: 0.5)
-
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.startAnimating()
-        view.addSubview(spinner)
-
-        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    
+    
+    func inSearchMode() -> Bool {
+        let isActive = searchController.isActive
+        let searchText = searchController.searchBar.text ?? ""
+        
+        return isActive && !searchText.isEmpty
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.viewModel.searchControllerUpdatedWith(searchText: searchController.searchBar.text)
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 class UIViewControllerWithSpinner: UIViewController {
     
-    var spinnerVC = SpinnerViewController()
+    private var spinnerVC = SpinnerViewController()
     
     func startSpinner() {
         addChild(spinnerVC)
@@ -22,5 +22,22 @@ class UIViewControllerWithSpinner: UIViewController {
         spinnerVC.willMove(toParent: nil)
         spinnerVC.view.removeFromSuperview()
         spinnerVC.removeFromParent()
+    }
+}
+
+
+private class SpinnerViewController: UIViewController {
+    private var spinner = UIActivityIndicatorView(style: .large)
+
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = UIColor(white: 1, alpha: 0.5)
+
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.startAnimating()
+        view.addSubview(spinner)
+
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
 }

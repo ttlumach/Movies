@@ -9,63 +9,93 @@ import Foundation
 import UIKit
 import Nuke
 
+protocol HomeMoviesViewModelDelegate: AnyObject {
+    func inSearchMode() -> Bool
+}
+
 class HomeMoviesViewModel {
     var onMoviesUpdated: (() -> Void)?
     var onErrorMessage: ((Error) -> Void)?
     
-    private(set) var allMovies: [MovieModel] = [] {
+    weak var delegate: HomeMoviesViewModelDelegate?
+    
+    private(set) var popularMovies: [MovieModel] = [] {
         didSet {
             self.onMoviesUpdated?()
         }
     }
+    private var popularMoviesCurrentPage = 1
+    private var popularMoviesLastPage = 1
     
     private(set) var genresDictionary: [Int: String] = [:] // ID: Name
     
-    private(set) var filteredMovies: [MovieModel] = []
-    
-    var filterState = SortState.none {
+    private(set) var searchedMovies: [MovieModel] = []  {
         didSet {
-            sort(state: filterState)
+            self.onMoviesUpdated?()
+        }
+    }
+    private var searchedMoviesCurrentPage = 1
+    private var searchedMoviesLastPage = 1
+    
+    var filteredMovies: [MovieModel] {
+        if delegate?.inSearchMode() == true {
+            return sortedMovies(searchedMovies)
+        } else {
+            return sortedMovies(popularMovies)
         }
     }
     
+    var filterState = SortState.none
+    
     private let api: MovieAPIProtocol = MovieAPI()
-    private var currentPage = 1
-    private var lastPage = 1
     
     init() {
-        fetchMovies()
+        fetchMoviesByPopularity()
         fetchGenres()
     }
     
-    private func sort(state: SortState) {
-        guard state != .none else { return }
-        allMovies.sort { state == .asc ? $0.title < $1.title  : $0.title > $1.title }
-        filteredMovies.sort { state == .asc ? $0.title < $1.title  : $0.title > $1.title }
+    private func sortedMovies(_ movies: [MovieModel]) -> [MovieModel] {
+        guard filterState != .none else { return movies }
+        return movies.sorted { filterState == .asc ? $0.title < $1.title  : $0.title > $1.title }
     }
     
     func refresh() async {
-        api.fetchMoviesbyPage(page: 1) { [weak self] result in
+        api.fetchPopularMoviesbyPage(page: 1) { [weak self] result in
             guard let strongSelf = self else { return }
             switch result {
             case .success(let response):
-                let newItems = response.results.filter { !strongSelf.allMovies.contains($0) }
-                strongSelf.allMovies.insert(contentsOf: newItems, at: 0)
-                self?.sort(state: self?.filterState ?? .none)
+                let newItems = response.results.filter { !strongSelf.popularMovies.contains($0) }
+                if !newItems.isEmpty {
+                    strongSelf.popularMovies.insert(contentsOf: newItems, at: 0)
+                }
             case .failure(let error):
                 self?.onErrorMessage?(error)
             }
         }
     }
     
-    func fetchMovies() {
-        api.fetchMoviesbyPage(page: currentPage) { [weak self] result in
+    func fetchMoviesByPopularity() {
+        guard popularMoviesCurrentPage <= popularMoviesLastPage else { return }
+        api.fetchPopularMoviesbyPage(page: popularMoviesCurrentPage) { [weak self] result in
             switch result {
             case .success(let response):
-                self?.allMovies.append(contentsOf: response.results)
-                self?.lastPage = response.totalPages
-                self?.sort(state: self?.filterState ?? .none)
-                self?.currentPage += 1
+                self?.popularMovies.append(contentsOf: response.results)
+                self?.popularMoviesLastPage = response.totalPages
+                self?.popularMoviesCurrentPage += 1
+            case .failure(let error):
+                self?.onErrorMessage?(error)
+            }
+        }
+    }
+    
+    func fetchMoviesBySearchText(searchText: String) {
+        guard searchedMoviesCurrentPage <= searchedMoviesLastPage else { return }
+        api.fetchMoviesbySearchText(page: searchedMoviesCurrentPage, searchText: searchText) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.searchedMovies.append(contentsOf: response.results)
+                self?.searchedMoviesLastPage = response.totalPages
+                self?.searchedMoviesCurrentPage += 1
             case .failure(let error):
                 self?.onErrorMessage?(error)
             }
@@ -90,22 +120,18 @@ class HomeMoviesViewModel {
 
 extension HomeMoviesViewModel {
     
-    public func inSearchMode(_ searchController: UISearchController) -> Bool {
-        let isActive = searchController.isActive
-        let searchText = searchController.searchBar.text ?? ""
+    public func searchControllerUpdatedWith(searchText: String?) {
+        searchedMovies = []
+        searchedMoviesLastPage = 1
+        searchedMoviesCurrentPage = 1
         
-        return isActive && !searchText.isEmpty
-    }
-    
-    public func updateSearchController(searchBarText: String?) {
-        self.filteredMovies = allMovies
-
-        if let searchText = searchBarText?.lowercased() {
-            guard !searchText.isEmpty else { self.onMoviesUpdated?(); return }
+        if let searchText = searchText?.lowercased() {
+            guard !searchText.isEmpty else {
+                self.onMoviesUpdated?()
+                return
+            }
             
-            self.filteredMovies = self.filteredMovies.filter({ $0.title.lowercased().contains(searchText) })
+            fetchMoviesBySearchText(searchText: searchText)
         }
-        
-        self.onMoviesUpdated?()
     }
 }

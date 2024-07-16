@@ -8,9 +8,10 @@
 import Foundation
 
 protocol MovieAPIProtocol {
-    func fetchMoviesbyPage(page: Int, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)
+    func fetchPopularMoviesbyPage(page: Int, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)
     func fetchGenres(onCompletion: @escaping (_ result: Result<GenreResponse, Error>) -> Void)
     func fetchVideos(movieID: Int, onCompletion: @escaping (_ result: Result<MovieVideoResponse, Error>) -> Void)
+    func fetchMoviesbySearchText(page: Int, searchText: String, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)
 }
 
 enum MovieURL {
@@ -19,12 +20,14 @@ enum MovieURL {
     static private var imageOriginalUrlBase = "https://image.tmdb.org/t/p/original"
     static private var genreUrl = "https://api.themoviedb.org/3/genre/movie/list"
     static private var baseUrl = "https://api.themoviedb.org/3/movie/"
+    static private var searchUrl = "https://api.themoviedb.org/3/search/movie"
   
     case getImageURL(filePath: String)
     case getSmallImageURL(filePath: String)
     case getPopularMoviesURL(page: Int)
     case getGenresUrl
     case getTrailerUrl(movieID: Int)
+    case getSearchUrl(searchText: String, page: Int)
     
     var url: URL? {
         switch self {
@@ -38,6 +41,8 @@ enum MovieURL {
             URL(string: Self.genreUrl)
         case .getTrailerUrl(movieID: let id):
             URL(string: Self.baseUrl + String(id) + "/videos")
+        case .getSearchUrl(searchText: let text, let page):
+            URL(string: Self.searchUrl + "?query=" + text.replacingOccurrences(of: " ", with: "+") + "&page=\(page)")
         }
     }
 }
@@ -46,8 +51,14 @@ struct MovieAPI: MovieAPIProtocol {
 
     private let networkSevice: NetworkServiceProtocol = NetworkService()
 
-    func fetchMoviesbyPage(page: Int, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)  {
+    func fetchPopularMoviesbyPage(page: Int, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)  {
         fetch(url: MovieURL.getPopularMoviesURL(page: page).url) { moviesResult in
+            onCompletion(moviesResult)
+        }
+    }
+    
+    func fetchMoviesbySearchText(page: Int, searchText: String, onCompletion: @escaping (_ result: Result<MovieResponse, Error>) -> Void)  {
+        fetch(url: MovieURL.getSearchUrl(searchText: searchText, page: page).url) { moviesResult in
             onCompletion(moviesResult)
         }
     }

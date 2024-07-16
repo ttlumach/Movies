@@ -73,6 +73,7 @@ class MovieViewModel {
     }
     
     private func getGenreNamesFromIDs(IDs: [Int]) -> String {
+        guard !IDs.isEmpty else { return "-" }
         var genres = IDs.reduce("") {
             return $0 + ", " + (genresDictionary[$1] ?? "")
         }

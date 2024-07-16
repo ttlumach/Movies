@@ -146,22 +146,8 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
             displayErrorAlert(error: NetworkError.badUrl)
             return
         }
-        
-        Task {
-            do {
-                let imagePipeline = ImagePipeline(configuration: .withDataCache)
-                let vc = FullScreenImageViewController()
-                
-                startSpinner()
-                let image = try await imagePipeline.image(for: url)
-                vc.image = image
-                stopSpinner()
-                
-                self.present(vc, animated: true, completion: nil)
-            } catch let error {
-                displayErrorAlert(error: error)
-            }
-        }
+        guard let vc = viewModel?.createFullScreenImageVC(imageUrl: url) else { return }
+        self.present(vc, animated: true, completion: nil)
     }
 
     @objc private func trailerButtonTapped() {

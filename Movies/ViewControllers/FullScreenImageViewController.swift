@@ -8,18 +8,30 @@
 import UIKit
 import ImageScrollView
 import SnapKit
+import Nuke
 
-class FullScreenImageViewController: UIViewController {
+class FullScreenImageViewController: UIViewControllerWithSpinner {
     
     private var imageScrollView = ImageScrollView()
-    var image: UIImage?
+    private var image: UIImage?
+    private let url: URL
+    private var task: Task<(), Never>?
+    
+    init(url: URL) {
+        self.url = url
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let tgr = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.addGestureRecognizer(tgr)
-        view.backgroundColor = .clear
+        view.backgroundColor = .black.withAlphaComponent(0.4)
         
         view.addSubview(imageScrollView)
         imageScrollView.addGestureRecognizer(tgr)
@@ -28,12 +40,38 @@ class FullScreenImageViewController: UIViewController {
         }
         
         imageScrollView.setup()
-        imageScrollView.imageContentMode = .aspectFit
+        imageScrollView.imageContentMode = .widthFill
         imageScrollView.initialOffset = .center
-        imageScrollView.display(image: image ?? UIImage())
+        
+        getImage(url: url)
+    }
+    
+    func getImage(url: URL) {
+        startSpinner()
+        task = Task.detached(priority: .userInitiated) {
+            do {
+                let imagePipeline = ImagePipeline(configuration: .withDataCache)
+                let image = try await imagePipeline.image(for: url)
+                await MainActor.run { [weak self] in
+                    self?.stopSpinner()
+                    self?.image = image
+                    self?.imageScrollView.display(image: image)
+                }
+            } catch {
+                await MainActor.run { [weak self] in
+                    self?.stopSpinner()
+                    self?.displayErrorAlert(error: NetworkError.cantLoadImage)
+                }
+            }
+        }
     }
     
     @objc func handleTap(tap: UITapGestureRecognizer) {
+        if image == nil {
+            task?.cancel()
+            self.dismiss(animated: true)
+        }
+        
         if (tap.state == .ended) {
             let point = tap.location(in: self.view)
             

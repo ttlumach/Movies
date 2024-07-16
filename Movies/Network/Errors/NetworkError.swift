@@ -6,15 +6,17 @@
 //
 
 import Foundation
+import UIKit
 
-enum NetworkError: Error {
+enum NetworkError: LocalizedError {
     case serverError(MovieResponseError)
     case unknown
     case badUrl
     case decodingError
     case noInternet
+    case cantLoadImage
     
-    var localizedDescription: String {
+    var errorDescription: String? {
         switch self {
         case .unknown:
             "An unknown error occurred."
@@ -26,6 +28,8 @@ enum NetworkError: Error {
             "Server Error found.\n" + error.statusMessage
         case .noInternet:
             "You are offline.\nPlease, enable your Wi-Fi or connect using cellular data."
+        case .cantLoadImage:
+            "Cannot load image from url"
         }
     }
 }

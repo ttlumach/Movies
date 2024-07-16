@@ -7,9 +7,13 @@
 
 import UIKit
 import Alamofire
+
 class InternetConnectionManager {
     static let shared = InternetConnectionManager()
     let reachabilityManager = Alamofire.NetworkReachabilityManager(host: "www.apple.com")
+    
+    private init() {}
+    
     func startNetworkReachabilityObserver() {
         reachabilityManager?.startListening(onUpdatePerforming: { [weak self] status in
             switch status {

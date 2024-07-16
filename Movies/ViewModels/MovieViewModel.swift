@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-
+import Nuke
 
 class MovieViewModel {
     private var movie: MovieModel
@@ -38,17 +38,17 @@ class MovieViewModel {
     }
     
     var smallImageUrl: URL? {
-        let imagePath = movie.backdropPath ?? movie.posterPath ?? ""
+        guard let imagePath = movie.backdropPath ?? movie.posterPath else { return nil }
         return MovieURL.getSmallImageURL(filePath: imagePath).url
     }
     
     var imageUrl: URL? {
-        let imagePath = movie.backdropPath ?? movie.posterPath ?? ""
+        guard let imagePath = movie.backdropPath ?? movie.posterPath else { return nil }
         return MovieURL.getImageURL(filePath: imagePath).url
     }
     
     var posterImageUrl: URL? {
-        let imagePath = movie.posterPath ?? ""
+        guard let imagePath = movie.posterPath else { return nil }
         return MovieURL.getImageURL(filePath: imagePath).url
     }
     
@@ -112,5 +112,12 @@ class MovieViewModel {
                 self?.onErrorMessage?(error)
             }
         }
+    }
+    
+    func createFullScreenImageVC(imageUrl: URL) -> FullScreenImageViewController {
+        let vc = FullScreenImageViewController(url: imageUrl)
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        return vc
     }
 }

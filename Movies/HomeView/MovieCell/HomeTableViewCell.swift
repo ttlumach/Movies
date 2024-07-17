@@ -48,12 +48,14 @@ class HomeTableViewCell: UITableViewCell {
         genresLabel.preferredMaxLayoutWidth = 150
         genresLabel.numberOfLines = 3
         titleLabel.numberOfLines = 3
-        movieImageView.contentMode = .scaleToFill
+
         movieImageView.layer.shadowColor = UIColor.black.cgColor
         movieImageView.layer.shadowRadius = 6
-        movieImageView.layer.shadowOpacity = 0.8
-        movieImageView.layer.shadowOffset = CGSize(width: 4, height: 2)
+        movieImageView.layer.shadowOpacity = 1
+        movieImageView.layer.shadowOffset = CGSize(width: 2, height: 1)
         movieImageView.layer.masksToBounds = false
+        movieImageView.imageView.contentMode = .scaleAspectFill
+        movieImageView.imageView.clipsToBounds = true
     }
     
     private func setupTextAndBackground() {

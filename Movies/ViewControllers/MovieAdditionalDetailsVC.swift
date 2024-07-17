@@ -45,7 +45,7 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
     private func setupUI() {
         view.addSubview(movieImageView)
         movieImageView.snp.makeConstraints { make in
-            make.height.equalTo(200)
+            make.height.equalTo(300)
             make.trailing.leading.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide)
         }
@@ -121,13 +121,14 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
     
     private func setupImageView() {
         movieImageView.layer.shadowColor = UIColor.black.cgColor
-        movieImageView.layer.shadowRadius = 6
+        movieImageView.layer.shadowRadius = 4
         movieImageView.layer.shadowOpacity = 0.8
         movieImageView.layer.shadowOffset = CGSize(width: 2, height: 1)
         movieImageView.layer.masksToBounds = false
-        movieImageView.contentMode = .scaleAspectFit
+        movieImageView.imageView.contentMode = .scaleAspectFill
+        movieImageView.imageView.clipsToBounds = true
         
-        if let url = viewModel?.imageUrl {
+        if let url = viewModel?.posterImageUrl ?? viewModel?.imageUrl {
             movieImageView.placeholderView = UIActivityIndicatorView()
             movieImageView.priority = .veryHigh
             let imagePipeline = ImagePipeline(configuration: .withDataCache)

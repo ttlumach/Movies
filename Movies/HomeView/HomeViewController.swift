@@ -8,10 +8,6 @@
 import UIKit
 import SnapKit
 
-enum SortState {
-    case asc, desc, none
-}
-
 class HomeViewController: UIViewControllerWithSpinner {
     
     private let emptyResultsText = "There are no results for your search query."
@@ -25,7 +21,7 @@ class HomeViewController: UIViewControllerWithSpinner {
     
     var viewModel: HomeMoviesViewModel = HomeMoviesViewModel()
     
-    private var filterButton: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
+    private var sortBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,11 +39,6 @@ class HomeViewController: UIViewControllerWithSpinner {
     }
     
     private func setupUI() {
-        title = "PopularMovies"
-        filterButton.action = #selector(presentSortOptions)
-        filterButton.target = self
-        navigationItem.rightBarButtonItem = filterButton
-        
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
@@ -57,6 +48,11 @@ class HomeViewController: UIViewControllerWithSpinner {
         }
         setupRefreshControll()
         setupSearchController()
+        createSortMenu()
+        
+        title = "PopularMovies"
+        sortBarButtonItem.target = self
+        navigationItem.rightBarButtonItem = sortBarButtonItem
     }
     
     private func setupSearchController() {
@@ -106,35 +102,46 @@ class HomeViewController: UIViewControllerWithSpinner {
         }
     }
     
-    @objc private func presentSortOptions() {
-        let ascAction = UIAlertAction(title: "Asc", style: .default) { (UIAlertAction) in
-            self.sortOptionSelected(.asc)
+    // MARK: - Sort Menu
+    
+    private func updateMenuActionState() {
+        sortBarButtonItem.menu?.children.forEach { action in
+            guard let action = action as? UIAction else {
+                return
+            }
+            if action.title == viewModel.sortOptionSelected.name {
+                action.state = .on
+            } else {
+                action.state = .off
+            }
         }
+    }
+    
+    private func createSortMenu() {
+        let menuSortItems: [UIAction] = [
+            UIAction(title: "Asc") {[weak self] _ in self?.sortOptionSelected(.asc)},
+            UIAction(title: "Desc") {[weak self] _ in self?.sortOptionSelected(.desc)},
+            UIAction(title: "None") {[weak self] _ in self?.sortOptionSelected(.none)}
+        ]
         
-        let descAction = UIAlertAction(title: "Desc", style: .default) { (UIAlertAction) in
-            self.sortOptionSelected(.desc)
-        }
+        let menu =  UIMenu(title: "Sorting by name".uppercased(), children: menuSortItems)
         
-        let noneAction = UIAlertAction(title: "None", style: .default) { (UIAlertAction) in
-            self.sortOptionSelected(.none)
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
-        displayAlert(title: "Sort options", message: "Please Select an Option", actions: [ascAction, descAction, noneAction, cancelAction], prefrerredStyle: .actionSheet)
+        sortBarButtonItem.menu = menu
+        updateMenuActionState()
     }
     
     private func sortOptionSelected(_ sortOption: SortState) {
-        viewModel.filterState = sortOption
+        viewModel.sortOptionSelected = sortOption
         
         switch sortOption {
         case .asc:
-            filterButton.image = .init(systemName: "menubar.arrow.down.rectangle")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+            sortBarButtonItem.image = .init(systemName: "menubar.arrow.down.rectangle")?.withTintColor(.black, renderingMode: .alwaysOriginal)
         case .desc:
-            filterButton.image = .init(systemName: "menubar.arrow.up.rectangle")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+            sortBarButtonItem.image = .init(systemName: "menubar.arrow.up.rectangle")?.withTintColor(.black, renderingMode: .alwaysOriginal)
         case .none:
-            filterButton.image = .init(systemName: "menubar.rectangle")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+            sortBarButtonItem.image = .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal)
         }
+        updateMenuActionState()
     }
 }
 

@@ -13,6 +13,21 @@ protocol HomeMoviesViewModelDelegate: AnyObject {
     func inSearchMode() -> Bool
 }
 
+enum SortState {
+    case asc, desc, none
+    
+    var name: String {
+        switch self {
+        case .asc:
+            "Asc"
+        case .desc:
+            "Desc"
+        case .none:
+            "None"
+        }
+    }
+}
+
 class HomeMoviesViewModel {
     var onMoviesUpdated: (() -> Void)?
     var onErrorMessage: ((Error) -> Void)?
@@ -45,7 +60,11 @@ class HomeMoviesViewModel {
         }
     }
     
-    var filterState = SortState.none
+    var sortOptionSelected = SortState.none {
+        didSet {
+            self.onMoviesUpdated?()
+        }
+    }
     
     private let api: MovieAPIProtocol = MovieAPI()
     
@@ -55,8 +74,8 @@ class HomeMoviesViewModel {
     }
     
     private func sortedMovies(_ movies: [MovieModel]) -> [MovieModel] {
-        guard filterState != .none else { return movies }
-        return movies.sorted { filterState == .asc ? $0.title < $1.title  : $0.title > $1.title }
+        guard sortOptionSelected != .none else { return movies }
+        return movies.sorted { sortOptionSelected == .asc ? $0.title < $1.title  : $0.title > $1.title }
     }
     
     func refresh() async {

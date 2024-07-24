@@ -116,7 +116,6 @@ class MovieViewModel {
     
     func createFullScreenImageVC(imageUrl: URL) -> FullScreenImageViewController {
         let vc = FullScreenImageViewController(url: imageUrl)
-        vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = .crossDissolve
         return vc
     }

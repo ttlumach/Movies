@@ -31,9 +31,12 @@ class FullScreenImageViewController: UIViewControllerWithSpinner {
         
         let tgr = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.addGestureRecognizer(tgr)
-        view.backgroundColor = .black.withAlphaComponent(0.4)
+
+        let blurredView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+        blurredView.frame = self.view.bounds
+        view.addSubview(blurredView)
         
-        view.addSubview(imageScrollView)
+        blurredView.contentView.addSubview(imageScrollView)
         imageScrollView.addGestureRecognizer(tgr)
         imageScrollView.snp.makeConstraints { make in
             make.top.bottom.leading.trailing.equalToSuperview()

@@ -13,6 +13,7 @@
 		6176116A2C5143A50031072F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617611692C5143A50031072F /* SettingsViewController.swift */; };
 		6176116C2C517B160031072F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6176116B2C517B150031072F /* Colors.xcassets */; };
 		6176116E2C5180160031072F /* AssetsColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6176116D2C5180160031072F /* AssetsColors.swift */; };
+		617611702C5191440031072F /* SettingsViewControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6176116F2C5191440031072F /* SettingsViewControllerViewModel.swift */; };
 		61B5DA0E2C46862D0068E48F /* InternetConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B5DA0D2C46862D0068E48F /* InternetConnectionManager.swift */; };
 		61F0219A2C36C34700960A62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F021992C36C34700960A62 /* AppDelegate.swift */; };
 		61F0219C2C36C34700960A62 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F0219B2C36C34700960A62 /* SceneDelegate.swift */; };
@@ -54,6 +55,7 @@
 		617611692C5143A50031072F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		6176116B2C517B150031072F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		6176116D2C5180160031072F /* AssetsColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsColors.swift; sourceTree = "<group>"; };
+		6176116F2C5191440031072F /* SettingsViewControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewControllerViewModel.swift; sourceTree = "<group>"; };
 		61B5DA0D2C46862D0068E48F /* InternetConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetConnectionManager.swift; sourceTree = "<group>"; };
 		61F021962C36C34700960A62 /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61F021992C36C34700960A62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 			isa = PBXGroup;
 			children = (
 				61F021E12C43D77300960A62 /* MovieViewModel.swift */,
+				6176116F2C5191440031072F /* SettingsViewControllerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				6176116A2C5143A50031072F /* SettingsViewController.swift in Sources */,
 				61F021CB2C3EF73000960A62 /* HomeMoviesViewModel.swift in Sources */,
 				61F021E42C43F7F000960A62 /* LazyImageView+Extensions.swift in Sources */,
+				617611702C5191440031072F /* SettingsViewControllerViewModel.swift in Sources */,
 				61F021E02C43D1B300960A62 /* GenreModel.swift in Sources */,
 				61F021EF2C44F85E00960A62 /* YoutubePlayerVC.swift in Sources */,
 				61F021BB2C371A7D00960A62 /* HomeTableViewCell.swift in Sources */,

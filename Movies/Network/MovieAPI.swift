@@ -21,6 +21,10 @@ enum MovieURL {
     static private var genreUrl = "https://api.themoviedb.org/3/genre/movie/list"
     static private var baseUrl = "https://api.themoviedb.org/3/movie/"
     static private var searchUrl = "https://api.themoviedb.org/3/search/movie"
+    static private var language: String {
+        guard let code = Locale.current.languageCode else { return "" }
+        return "language=" + code
+    }
   
     case getImageURL(filePath: String)
     case getSmallImageURL(filePath: String)
@@ -36,13 +40,13 @@ enum MovieURL {
         case .getSmallImageURL(filePath: let path):
             URL(string: Self.image500UrlBase + path)
         case .getPopularMoviesURL(let page):
-            URL(string: Self.popularMoviesUrl + "?page=\(page)")
+            URL(string: Self.popularMoviesUrl + "?page=\(page)" + "&\(Self.language)")
         case .getGenresUrl:
-            URL(string: Self.genreUrl)
+            URL(string: Self.genreUrl + "?\(Self.language)")
         case .getTrailerUrl(movieID: let id):
-            URL(string: Self.baseUrl + String(id) + "/videos")
+            URL(string: Self.baseUrl + String(id) + "/videos" + "?\(Self.language)")
         case .getSearchUrl(searchText: let text, let page):
-            URL(string: Self.searchUrl + "?query=" + text.replacingOccurrences(of: " ", with: "+") + "&page=\(page)")
+            URL(string: Self.searchUrl + "?query=" + text.replacingOccurrences(of: " ", with: "+") + "&page=\(page)" + "&\(Self.language)")
         }
     }
 }

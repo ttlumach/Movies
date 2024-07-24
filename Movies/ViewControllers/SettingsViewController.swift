@@ -15,11 +15,13 @@ class SettingsViewController: UIViewController {
     
     private var darkModeLabel = UILabel()
     private var darkModeSwitch = UISwitch()
+    private var viewModel: SettingsViewModelProtocol = SettingsViewControllerViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .background
-        title = LocalizedString.settings
+        title = viewModel.title
+        
         setupUI()
     }
     
@@ -33,9 +35,7 @@ class SettingsViewController: UIViewController {
             make.leading.equalToSuperview().offset(30)
         }
         
-        let code = Locale.current.languageCode ?? "en"
-        let languageName = (Locale.current as NSLocale).displayName(forKey: .identifier, value: code)
-        chooseLanguageButton.setTitle( (languageName ?? code), for: .normal)
+        chooseLanguageButton.setTitle(viewModel.userLanguage, for: .normal)
         chooseLanguageButton.addTarget(self, action: #selector(chooseLanguageButtonPressed), for: .touchUpInside)
         
         self.view.addSubview(chooseLanguageButton)
@@ -58,32 +58,15 @@ class SettingsViewController: UIViewController {
             make.centerY.equalTo(darkModeLabel.snp.centerY)
             make.centerX.equalTo(chooseLanguageButton)
         }
-        darkModeSwitch.isOn = isInDarkMode()
+        darkModeSwitch.isOn = viewModel.isInDarkMode()
         darkModeSwitch.addTarget(self, action: #selector(toggleDarkMode), for: .valueChanged)
     }
     
     @objc private func chooseLanguageButtonPressed() {
-        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
-        UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+        viewModel.chooseLanguage()
     }
     
     @objc private func toggleDarkMode() {
-        let scenes = UIApplication.shared.connectedScenes
-        let windowScene = scenes.first as? UIWindowScene
-        let window = windowScene?.windows.first
-        
-        if darkModeSwitch.isOn {
-            window?.overrideUserInterfaceStyle = .dark
-        } else {
-            window?.overrideUserInterfaceStyle = .light
-        }
-    }
-    
-    private func isInDarkMode() -> Bool {
-        let scenes = UIApplication.shared.connectedScenes
-        let windowScene = scenes.first as? UIWindowScene
-        let window = windowScene?.windows.first
-        let mode = window?.overrideUserInterfaceStyle == .unspecified ? UIScreen.main.traitCollection.userInterfaceStyle : window?.overrideUserInterfaceStyle
-        return mode == .dark
+        viewModel.toggleDarkMode()
     }
 }

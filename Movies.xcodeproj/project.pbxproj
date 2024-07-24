@@ -11,6 +11,8 @@
 		617611622C513A860031072F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 617611642C513A860031072F /* Localizable.strings */; };
 		617611682C51403E0031072F /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617611672C51403E0031072F /* Localizable.swift */; };
 		6176116A2C5143A50031072F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617611692C5143A50031072F /* SettingsViewController.swift */; };
+		6176116C2C517B160031072F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6176116B2C517B150031072F /* Colors.xcassets */; };
+		6176116E2C5180160031072F /* AssetsColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6176116D2C5180160031072F /* AssetsColors.swift */; };
 		61B5DA0E2C46862D0068E48F /* InternetConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B5DA0D2C46862D0068E48F /* InternetConnectionManager.swift */; };
 		61F0219A2C36C34700960A62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F021992C36C34700960A62 /* AppDelegate.swift */; };
 		61F0219C2C36C34700960A62 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F0219B2C36C34700960A62 /* SceneDelegate.swift */; };
@@ -50,6 +52,8 @@
 		617611652C513A880031072F /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		617611672C51403E0031072F /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		617611692C5143A50031072F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		6176116B2C517B150031072F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		6176116D2C5180160031072F /* AssetsColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsColors.swift; sourceTree = "<group>"; };
 		61B5DA0D2C46862D0068E48F /* InternetConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetConnectionManager.swift; sourceTree = "<group>"; };
 		61F021962C36C34700960A62 /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61F021992C36C34700960A62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -151,6 +155,8 @@
 				61F021992C36C34700960A62 /* AppDelegate.swift */,
 				61F0219B2C36C34700960A62 /* SceneDelegate.swift */,
 				61F021A22C36C34800960A62 /* Assets.xcassets */,
+				6176116B2C517B150031072F /* Colors.xcassets */,
+				6176116D2C5180160031072F /* AssetsColors.swift */,
 				61F021E32C43F7F000960A62 /* LazyImageView+Extensions.swift */,
 				61F021EA2C44E74C00960A62 /* ViewController+Extensions.swift */,
 			);
@@ -295,6 +301,7 @@
 				617611622C513A860031072F /* Localizable.strings in Resources */,
 				61F021A62C36C34800960A62 /* LaunchScreen.storyboard in Resources */,
 				6176115C2C5139AA0031072F /* HomeMovieTableViewCell.xib in Resources */,
+				6176116C2C517B160031072F /* Colors.xcassets in Resources */,
 				61F021A32C36C34800960A62 /* Assets.xcassets in Resources */,
 				61F021A12C36C34700960A62 /* Home.storyboard in Resources */,
 			);
@@ -308,6 +315,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				617611682C51403E0031072F /* Localizable.swift in Sources */,
+				6176116E2C5180160031072F /* AssetsColors.swift in Sources */,
 				61B5DA0E2C46862D0068E48F /* InternetConnectionManager.swift in Sources */,
 				61F021F72C4525E900960A62 /* UIViewControllerWithSpinner.swift in Sources */,
 				61F021D12C3EF7E500960A62 /* MovieModel.swift in Sources */,

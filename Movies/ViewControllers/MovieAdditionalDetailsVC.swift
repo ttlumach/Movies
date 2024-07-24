@@ -31,7 +31,7 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         setupUI()
         
         title = viewModel?.title
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         viewModel?.onTrailerUpdated = { [weak self] in
             self?.updateTrailerButtonState()
@@ -51,6 +51,7 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         }
         
         view.addSubview(titleLabel)
+        titleLabel.textColor = .primaryText
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(movieImageView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(10)
@@ -58,12 +59,14 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         }
         
         view.addSubview(releaseDateLabel)
+        releaseDateLabel.textColor = .secondaryText
         releaseDateLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(10)
         }
         
         view.addSubview(genresLabel)
+        genresLabel.textColor = .primaryText
         genresLabel.snp.makeConstraints { make in
             make.top.equalTo(releaseDateLabel.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(10)
@@ -77,12 +80,14 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         }
         
         view.addSubview(ratingLabel)
+        ratingLabel.textColor = .primaryText
         ratingLabel.snp.makeConstraints { make in
             make.centerY.equalTo(trailerButton.snp.centerY)
             make.trailing.equalToSuperview().offset(-10)
         }
         
         view.addSubview(overviewLabel)
+        overviewLabel.textColor = .primaryText
         overviewLabel.snp.makeConstraints { make in
             make.top.equalTo(trailerButton.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(10)

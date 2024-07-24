@@ -21,9 +21,9 @@ class HomeViewController: UIViewControllerWithSpinner {
     
     var viewModel: HomeMoviesViewModel = HomeMoviesViewModel()
     
-    private var sortBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
+    private var sortBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.secondaryText, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
     
-    private var settingsBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "gearshape")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
+    private var settingsBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "gearshape")?.withTintColor(.secondaryText, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,11 +146,11 @@ class HomeViewController: UIViewControllerWithSpinner {
         
         switch sortOption {
         case .asc:
-            sortBarButtonItem.image = .init(systemName: "menubar.arrow.down.rectangle")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+            sortBarButtonItem.image = .init(systemName: "menubar.arrow.down.rectangle")?.withTintColor(.secondaryText, renderingMode: .alwaysOriginal)
         case .desc:
-            sortBarButtonItem.image = .init(systemName: "menubar.arrow.up.rectangle")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+            sortBarButtonItem.image = .init(systemName: "menubar.arrow.up.rectangle")?.withTintColor(.secondaryText, renderingMode: .alwaysOriginal)
         case .none:
-            sortBarButtonItem.image = .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+            sortBarButtonItem.image = .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.secondaryText, renderingMode: .alwaysOriginal)
         }
         updateMenuActionState()
     }

@@ -36,4 +36,5 @@ enum LocalizedString {
     @Localizable static var youAreOffline = "You are offline.\nPlease, enable your Wi-Fi or connect using cellular data."
     @Localizable static var settings = "Settings"
     @Localizable static var language = "Language"
+    @Localizable static var darkMode = "Dark Mode"
 }

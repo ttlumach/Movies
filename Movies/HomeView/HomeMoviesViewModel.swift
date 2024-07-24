@@ -19,11 +19,11 @@ enum SortState {
     var name: String {
         switch self {
         case .asc:
-            "Asc"
+            LocalizedString.asc
         case .desc:
-            "Desc"
+            LocalizedString.desc
         case .none:
-            "None"
+            LocalizedString.none
         }
     }
 }

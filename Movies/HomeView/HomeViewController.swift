@@ -10,7 +10,7 @@ import SnapKit
 
 class HomeViewController: UIViewControllerWithSpinner {
     
-    private let emptyResultsText = "There are no results for your search query."
+    private let emptyResultsText = LocalizedString.noResultsForQuery
     private let searchController: UISearchController = UISearchController(searchResultsController: nil)
     private let tableView: UITableView = {
         let tv = UITableView()
@@ -22,6 +22,8 @@ class HomeViewController: UIViewControllerWithSpinner {
     var viewModel: HomeMoviesViewModel = HomeMoviesViewModel()
     
     private var sortBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
+    
+    private var settingsBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "gearshape")?.withTintColor(.black, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,16 +52,19 @@ class HomeViewController: UIViewControllerWithSpinner {
         setupSearchController()
         createSortMenu()
         
-        title = "PopularMovies"
+        title = LocalizedString.popularMovies
         sortBarButtonItem.target = self
+        settingsBarButtonItem.target = self
+        settingsBarButtonItem.action = #selector(showSettings)
         navigationItem.rightBarButtonItem = sortBarButtonItem
+        navigationItem.leftBarButtonItem = settingsBarButtonItem
     }
     
     private func setupSearchController() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.placeholder = "Search Movies"
+        searchController.searchBar.placeholder = LocalizedString.searchMovies
         
         navigationItem.searchController = searchController
         definesPresentationContext = false
@@ -73,6 +78,12 @@ class HomeViewController: UIViewControllerWithSpinner {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         tableView.refreshControl = refreshControl
+    }
+    
+    @objc private func showSettings() {
+        let vc = SettingsViewController()
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func handleMoviesUpdate() {
@@ -119,12 +130,12 @@ class HomeViewController: UIViewControllerWithSpinner {
     
     private func createSortMenu() {
         let menuSortItems: [UIAction] = [
-            UIAction(title: "Asc") {[weak self] _ in self?.sortOptionSelected(.asc)},
-            UIAction(title: "Desc") {[weak self] _ in self?.sortOptionSelected(.desc)},
-            UIAction(title: "None") {[weak self] _ in self?.sortOptionSelected(.none)}
+            UIAction(title: SortState.asc.name) {[weak self] _ in self?.sortOptionSelected(.asc)},
+            UIAction(title: SortState.desc.name) {[weak self] _ in self?.sortOptionSelected(.desc)},
+            UIAction(title: SortState.none.name) {[weak self] _ in self?.sortOptionSelected(.none)}
         ]
         
-        let menu =  UIMenu(title: "Sorting by name".uppercased(), children: menuSortItems)
+        let menu =  UIMenu(title: LocalizedString.sortByName.uppercased(), children: menuSortItems)
         
         sortBarButtonItem.menu = menu
         updateMenuActionState()

@@ -27,10 +27,10 @@ class InternetConnectionManager {
     }
     
     private func showNoInternetAlert() {
-        let alertController = UIAlertController(title: "Warning!",
+        let alertController = UIAlertController(title: LocalizedString.warning + "!",
                                                 message: NetworkError.noInternet.localizedDescription,
                                                 preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: LocalizedString.close, style: .cancel, handler: nil))
         
         let controller = UIApplication
             .shared

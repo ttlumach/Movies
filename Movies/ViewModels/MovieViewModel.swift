@@ -73,7 +73,7 @@ class MovieViewModel {
     }
     
     private func getGenreNamesFromIDs(IDs: [Int]) -> String {
-        guard !IDs.isEmpty else { return "N/A" }
+        guard !IDs.isEmpty else { return LocalizedString.notApplicable }
         var genres = IDs.reduce("") {
             return $0 + ", " + (genresDictionary[$1] ?? "")
         }

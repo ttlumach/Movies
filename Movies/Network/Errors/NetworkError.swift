@@ -19,7 +19,7 @@ enum NetworkError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unknown:
-            "An unknown error occurred."
+            LocalizedString.unnownError
         case .badUrl:
             "Bad URL"
         case .decodingError:
@@ -27,7 +27,7 @@ enum NetworkError: LocalizedError {
         case .serverError(let error):
             "Server Error found.\n" + error.statusMessage
         case .noInternet:
-            "You are offline.\nPlease, enable your Wi-Fi or connect using cellular data."
+            LocalizedString.youAreOffline
         case .cantLoadImage:
             "Cannot load image from url"
         }

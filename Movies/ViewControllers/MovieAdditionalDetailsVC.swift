@@ -102,7 +102,7 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         genresLabel.numberOfLines = 3
         genresLabel.font = .boldSystemFont(ofSize: 16)
         
-        ratingLabel.text = "Rating: " + (viewModel?.rating ?? "")
+        ratingLabel.text = LocalizedString.rating + " " + (viewModel?.rating ?? "")
         ratingLabel.font = .boldSystemFont(ofSize: 16)
         
         overviewLabel.text = viewModel?.overview

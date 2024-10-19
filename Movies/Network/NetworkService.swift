@@ -19,7 +19,8 @@ struct NetworkService: NetworkServiceProtocol {
                                HTTPHeader(name: "Authorization", value: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZDQ0MGRjMzJiOWJlZTA2NzhiYTc0NDZkMWFjZDAzMyIsIm5iZiI6MTcyMDQ1MjYwOS4xMzE4MjksInN1YiI6IjY2ODZkNzg3OWU1MThkYjA1YjFiZTBjNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qjEJ2L9fvnfkdm3xNAXYwHf12YqMtcOlgKOOSBHbQXY")])
     
     func fetchData(for url: URL, completionHandler: @escaping (Result<Data?, NetworkError>) -> ()) {
-        
+        print("FETCH ON GOING")
+        print(url)
         AF.request(url, headers: headers).response { dataResponce in
             if dataResponce.response?.statusCode != 200 {
                 do {

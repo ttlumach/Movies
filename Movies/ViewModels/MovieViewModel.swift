@@ -69,7 +69,6 @@ class MovieViewModel {
     init(movie: MovieModel, genresDictionary: [Int : String]) {
         self.movie = movie
         self.genresDictionary = genresDictionary
-        fetchVideo()
     }
     
     private func getGenreNamesFromIDs(IDs: [Int]) -> String {
@@ -122,5 +121,9 @@ class MovieViewModel {
     
     func getFullVideoURL(videoKey: String) -> URL? {
         URL(string: self.youtubeURLBase + videoKey)
+    }
+    
+    func loadAdditionalDetails() {
+        fetchVideo()
     }
 }

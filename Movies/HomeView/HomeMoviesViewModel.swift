@@ -39,8 +39,8 @@ class HomeMoviesViewModel {
             self.onMoviesUpdated?()
         }
     }
-    private var popularMoviesCurrentPage = 1
-    private var popularMoviesLastPage = 1
+    private var popularMoviesNextPageToFetch = 1
+    private var popularMoviesLastPage = 2
     
     private(set) var genresDictionary: [Int: String] = [:] // ID: Name
     
@@ -49,8 +49,9 @@ class HomeMoviesViewModel {
             self.onMoviesUpdated?()
         }
     }
-    private var searchedMoviesCurrentPage = 1
-    private var searchedMoviesLastPage = 1
+    private var lastSearchText = ""
+    private var searchedMoviesNextPageToFetch = 1
+    private var searchedMoviesLastPage = 2
     
     var filteredMovies: [MovieModel] {
         if delegate?.inSearchMode() == true {
@@ -63,6 +64,14 @@ class HomeMoviesViewModel {
     var sortOptionSelected = SortState.none {
         didSet {
             self.onMoviesUpdated?()
+        }
+    }
+    
+    var onLastPage: Bool {
+        if delegate?.inSearchMode() == true {
+            return searchedMoviesNextPageToFetch > searchedMoviesLastPage
+        } else {
+            return popularMoviesNextPageToFetch > popularMoviesLastPage
         }
     }
     
@@ -94,13 +103,13 @@ class HomeMoviesViewModel {
     }
     
     func fetchMoviesByPopularity() {
-        guard popularMoviesCurrentPage <= popularMoviesLastPage else { return }
-        api.fetchPopularMoviesbyPage(page: popularMoviesCurrentPage) { [weak self] result in
+        guard popularMoviesNextPageToFetch <= popularMoviesLastPage else { return }
+        api.fetchPopularMoviesbyPage(page: popularMoviesNextPageToFetch) { [weak self] result in
             switch result {
             case .success(let response):
                 self?.popularMovies.append(contentsOf: response.results)
                 self?.popularMoviesLastPage = response.totalPages
-                self?.popularMoviesCurrentPage += 1
+                self?.popularMoviesNextPageToFetch += 1
             case .failure(let error):
                 self?.onErrorMessage?(error)
             }
@@ -108,13 +117,13 @@ class HomeMoviesViewModel {
     }
     
     func fetchMoviesBySearchText(searchText: String) {
-        guard searchedMoviesCurrentPage <= searchedMoviesLastPage else { return }
-        api.fetchMoviesbySearchText(page: searchedMoviesCurrentPage, searchText: searchText) { [weak self] result in
+        guard searchedMoviesNextPageToFetch <= searchedMoviesLastPage else { return }
+        api.fetchMoviesbySearchText(page: searchedMoviesNextPageToFetch, searchText: searchText) { [weak self] result in
             switch result {
             case .success(let response):
                 self?.searchedMovies.append(contentsOf: response.results)
                 self?.searchedMoviesLastPage = response.totalPages
-                self?.searchedMoviesCurrentPage += 1
+                self?.searchedMoviesNextPageToFetch += 1
             case .failure(let error):
                 self?.onErrorMessage?(error)
             }
@@ -139,12 +148,21 @@ class HomeMoviesViewModel {
 
 extension HomeMoviesViewModel {
     
+    public func loadNextPage() {
+        if delegate?.inSearchMode() == true {
+            fetchMoviesBySearchText(searchText: lastSearchText)
+        } else {
+            fetchMoviesByPopularity()
+        }
+    }
+    
     public func searchControllerUpdatedWith(searchText: String?) {
         searchedMovies = []
         searchedMoviesLastPage = 1
-        searchedMoviesCurrentPage = 1
+        searchedMoviesNextPageToFetch = 1
         
         if let searchText = searchText?.lowercased() {
+            self.lastSearchText = searchText
             guard !searchText.isEmpty else {
                 self.onMoviesUpdated?()
                 return

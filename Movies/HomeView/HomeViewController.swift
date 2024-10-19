@@ -187,10 +187,11 @@ extension HomeViewController: UITableViewDataSource {
         
         // - for fetch more on scroll
         if let visiblePaths = tableView.indexPathsForVisibleRows,
-           !inSearchMode(),
-           visiblePaths.contains([0, viewModel.popularMovies.count - 1]) {
-            viewModel.fetchMoviesByPopularity()
-            startSpinner()
+           visiblePaths.contains([0, viewModel.filteredMovies.count - 1]) {
+            if !viewModel.onLastPage {
+                viewModel.loadNextPage()
+                startSpinner()
+            }
         }
         
         return cell

@@ -28,6 +28,7 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         setupUI()
         
         title = viewModel?.title
+        viewModel?.loadAdditionalDetails()
         view.backgroundColor = .background
         
         viewModel?.onVideosUpdated = { [weak self] in

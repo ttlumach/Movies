@@ -20,7 +20,7 @@ class SettingsViewControllerViewModel: SettingsViewModelProtocol {
     private(set) var title = LocalizedString.settings
     
     var userLanguage: String {
-        let code = Locale.current.languageCode ?? "en"
+        let code = Locale.current.language.languageCode?.identifier ?? "en"
         return (Locale.current as NSLocale).displayName(forKey: .identifier, value: code) ?? code
     }
     

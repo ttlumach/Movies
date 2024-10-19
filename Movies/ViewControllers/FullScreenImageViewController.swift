@@ -51,7 +51,7 @@ class FullScreenImageViewController: UIViewControllerWithSpinner {
     
     func getImage(url: URL) {
         startSpinner()
-        task = Task.detached(priority: .userInitiated) {
+        task = Task(priority: .userInitiated) {
             do {
                 let imagePipeline = ImagePipeline(configuration: .withDataCache)
                 let image = try await imagePipeline.image(for: url)

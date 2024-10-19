@@ -26,6 +26,7 @@ enum LocalizedString {
     @Localizable static var noResultsForQuery = "There are no results for your search query."
     @Localizable static var popularMovies = "Popular Movies"
     @Localizable static var searchMovies = "Search movies"
+    @Localizable static var videos = "Videos"
     @Localizable static var asc = "Asc"
     @Localizable static var desc = "Desc"
     @Localizable static var none = "None"

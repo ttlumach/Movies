@@ -14,7 +14,7 @@ class MovieViewModel {
     private let api: MovieAPIProtocol = MovieAPI()
     private let youtubeURLBase = "https://www.youtube.com/watch?v="
     
-    var onTrailerUpdated: (() -> Void)?
+    var onVideosUpdated: (() -> Void)?
     var onErrorMessage: ((Error) -> Void)?
     
     let defaultImage = UIImage(named: "defaultMovieImage")
@@ -64,7 +64,7 @@ class MovieViewModel {
         movie.releaseDate
     }
     
-    var trailerUrl: URL?
+    var videos: [Video] = []
     
     init(movie: MovieModel, genresDictionary: [Int : String]) {
         self.movie = movie
@@ -100,14 +100,14 @@ class MovieViewModel {
             switch result {
             case .success(let response):
                 let videos = response.results
+                guard !videos.isEmpty else { return }
+                
                 for video in videos {
-                    if video.name.lowercased() == "official trailer" {
-                        self?.trailerUrl = URL(string: (self?.youtubeURLBase ?? "") + video.key)
-                    } else if video.type.lowercased() == "trailer" {
-                        self?.trailerUrl = URL(string: (self?.youtubeURLBase ?? "") + video.key)
-                    }
-                    self?.onTrailerUpdated?()
+                    self?.videos.append(video)
                 }
+                
+                self?.videos.sort { $0.type > $1.type }
+                self?.onVideosUpdated?()
             case .failure(let error):
                 self?.onErrorMessage?(error)
             }
@@ -118,5 +118,9 @@ class MovieViewModel {
         let vc = FullScreenImageViewController(url: imageUrl)
         vc.modalTransitionStyle = .crossDissolve
         return vc
+    }
+    
+    func getFullVideoURL(videoKey: String) -> URL? {
+        URL(string: self.youtubeURLBase + videoKey)
     }
 }

@@ -110,6 +110,15 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
+		617611CF2C626C6C0031072F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				61F021EA2C44E74C00960A62 /* ViewController+Extensions.swift */,
+				61F021E32C43F7F000960A62 /* LazyImageView+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		61B5DA0F2C46866C0068E48F /* Errors */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +133,7 @@
 			children = (
 				61F021982C36C34700960A62 /* Movies */,
 				617611662C51401A0031072F /* Localization */,
+				617611CF2C626C6C0031072F /* Extensions */,
 				61F021C32C3EF5F900960A62 /* Supporting */,
 				61F021972C36C34700960A62 /* Products */,
 			);
@@ -159,8 +169,6 @@
 				61F021A22C36C34800960A62 /* Assets.xcassets */,
 				6176116B2C517B150031072F /* Colors.xcassets */,
 				6176116D2C5180160031072F /* AssetsColors.swift */,
-				61F021E32C43F7F000960A62 /* LazyImageView+Extensions.swift */,
-				61F021EA2C44E74C00960A62 /* ViewController+Extensions.swift */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -521,7 +529,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Home;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -550,7 +558,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Home;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

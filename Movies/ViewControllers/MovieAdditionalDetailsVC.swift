@@ -9,9 +9,6 @@ import UIKit
 import NukeUI
 import Nuke
 import SnapKit
-import AVFoundation
-import AVKit
-
 class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
     
     var viewModel: MovieViewModel?
@@ -21,7 +18,7 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
     private var releaseDateLabel = UILabel()
     private var genresLabel = UILabel()
     private var ratingLabel = UILabel()
-    private var trailerButton = UIButton()
+    private var videosButton = UIButton()
     private var overviewLabel = UILabel()
     
     override func viewDidLoad() {
@@ -33,8 +30,9 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         title = viewModel?.title
         view.backgroundColor = .background
         
-        viewModel?.onTrailerUpdated = { [weak self] in
-            self?.updateTrailerButtonState()
+        viewModel?.onVideosUpdated = { [weak self] in
+            self?.updateVideosButtonState()
+            self?.setMenuItems()
         }
         
         viewModel?.onErrorMessage = { [weak self] error in
@@ -73,8 +71,8 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         }
         genresLabel.numberOfLines = 3
         
-        view.addSubview(trailerButton)
-        trailerButton.snp.makeConstraints { make in
+        view.addSubview(videosButton)
+        videosButton.snp.makeConstraints { make in
             make.top.equalTo(genresLabel.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(10)
         }
@@ -82,46 +80,63 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         view.addSubview(ratingLabel)
         ratingLabel.textColor = .primaryText
         ratingLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(trailerButton.snp.centerY)
+            make.centerY.equalTo(videosButton.snp.centerY)
             make.trailing.equalToSuperview().offset(-10)
         }
         
         view.addSubview(overviewLabel)
         overviewLabel.textColor = .primaryText
         overviewLabel.snp.makeConstraints { make in
-            make.top.equalTo(trailerButton.snp.bottom).offset(20)
+            make.top.equalTo(videosButton.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(10)
             make.trailing.equalToSuperview().offset(-10)
         }
     }
     
     private func setupData() {
-        titleLabel.text = viewModel?.title
+        guard let viewModel = viewModel else { return }
+        titleLabel.text = viewModel.title
         titleLabel.numberOfLines = 2
         titleLabel.font = .boldSystemFont(ofSize: 30)
         
-        releaseDateLabel.text = viewModel?.releaseDate
+        releaseDateLabel.text = viewModel.releaseDate
         releaseDateLabel.font = .boldSystemFont(ofSize: 16)
         
-        genresLabel.text = viewModel?.genres
+        genresLabel.text = viewModel.genres
         genresLabel.numberOfLines = 3
         genresLabel.font = .boldSystemFont(ofSize: 16)
         
-        ratingLabel.text = LocalizedString.rating + " " + (viewModel?.rating ?? "")
+        ratingLabel.text = LocalizedString.rating + " " + viewModel.rating
         ratingLabel.font = .boldSystemFont(ofSize: 16)
         
-        overviewLabel.text = viewModel?.overview
+        overviewLabel.text = viewModel.overview
         overviewLabel.numberOfLines = .max
         
-        trailerButton.setImage(UIImage(systemName: "play.rectangle")?.withTintColor(.red), for: .normal)
-        trailerButton.addTarget(self, action: #selector(trailerButtonTapped), for: .touchUpInside)
-        updateTrailerButtonState()
+        videosButton.setImage(UIImage(systemName: "play.rectangle")?.withTintColor(.red), for: .normal)
+        
+        updateVideosButtonState()
         
         setupImageView()
     }
     
-    private func updateTrailerButtonState() {
-        trailerButton.isHidden = viewModel?.trailerUrl == nil
+    private func setMenuItems(){
+        guard let viewModel = viewModel else { return }
+        
+        var trailerItems: [UIAction] = []
+        
+        for video in viewModel.videos {
+            let url = viewModel.getFullVideoURL(videoKey: video.key)
+            let title = video.type + ": " + video.name
+            let action = UIAction(title: title) { [weak self] _ in self?.videoButtonTapped(withURL: url) }
+            trailerItems.append(action)
+        }
+        
+        videosButton.menu = UIMenu(title: LocalizedString.videos, children: trailerItems)
+        videosButton.showsMenuAsPrimaryAction = true
+    }
+    
+    private func updateVideosButtonState() {
+            videosButton.isHidden = viewModel?.videos.isEmpty ?? true
     }
     
     private func setupImageView() {
@@ -156,8 +171,8 @@ class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
         self.present(vc, animated: true, completion: nil)
     }
 
-    @objc private func trailerButtonTapped() {
-        guard let url = viewModel?.trailerUrl else {
+    @objc private func videoButtonTapped(withURL videoURL: URL?) {
+        guard let url = videoURL else {
            displayErrorAlert(error:  NetworkError.badUrl)
             return
         }

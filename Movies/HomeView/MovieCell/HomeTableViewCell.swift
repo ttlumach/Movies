@@ -11,14 +11,14 @@ import Nuke
 
 class HomeTableViewCell: UITableViewCell {
 
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var yearLabel: UILabel!
-    @IBOutlet var genresLabel: UILabel!
-    @IBOutlet var ratingLabel: UILabel!
-    @IBOutlet var movieImageView: LazyImageView!
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var yearLabel: UILabel!
+    @IBOutlet private var genresLabel: UILabel!
+    @IBOutlet private var ratingLabel: UILabel!
+    @IBOutlet private var movieImageView: LazyImageView!
     
-    @IBOutlet var genresStaticLabel: UILabel!
-    @IBOutlet var ratingStaticLabel: UILabel!
+    @IBOutlet private var genresStaticLabel: UILabel!
+    @IBOutlet private var ratingStaticLabel: UILabel!
     
     private var viewModel: MovieViewModel?
     

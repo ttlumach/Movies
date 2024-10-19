@@ -22,7 +22,7 @@ enum MovieURL {
     static private var baseUrl = "https://api.themoviedb.org/3/movie/"
     static private var searchUrl = "https://api.themoviedb.org/3/search/movie"
     static private var language: String {
-        guard let code = Locale.current.languageCode else { return "" }
+        guard let code = Locale.current.language.languageCode?.identifier else { return "" }
         return "language=" + code
     }
   

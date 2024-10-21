@@ -6,13 +6,15 @@
 //
 
 import UIKit
+import SwiftUI
 
 enum AssetsColor {
-   case primaryText
-   case secondaryText
-   case background
-   case secondaryBackground
-   case tertiaryBackground
+    case primaryText
+    case secondaryText
+    case background
+    case secondaryBackground
+    case tertiaryBackground
+    case highlightedText
 }
 
 extension UIColor {
@@ -29,6 +31,27 @@ extension UIColor {
             return UIColor(named: "SecondaryBackground")
         case .tertiaryBackground:
             return UIColor(named: "TertiaryBackground")
+        case .highlightedText:
+            return UIColor(named: "Highlights")
+        }
+    }
+}
+
+extension Color {
+    static func appColor(_ name: AssetsColor) -> Color {
+        switch name {
+        case .primaryText:
+            return Color("PrimaryText")
+        case .secondaryText:
+            return Color("SecondaryText")
+        case .background:
+            return Color("Background")
+        case .secondaryBackground:
+            return Color("SecondaryBackground")
+        case .tertiaryBackground:
+            return Color("TertiaryBackground")
+        case .highlightedText:
+            return Color("Highlights")
         }
     }
 }

@@ -32,7 +32,7 @@ struct TabsView: View {
     let tabBarCornerRadius: CGFloat = 12
     let offsetMultiplier: Int = 105
     
-    @State var selectedTab: Tab = .home
+    @Binding var selectedTab: Tab
     @State var offsetX: CGFloat = 0
     
     @State var tabItems = [
@@ -47,7 +47,7 @@ struct TabsView: View {
             ForEach(tabItems) { item in
                 Spacer()
                 Image(systemName: item.iconName)
-                    .foregroundStyle(selectedTab == item.tab ? Color.appColor(.highlightedText) : .gray)
+                    .foregroundStyle(selectedTab == item.tab ? Color.appColor(.highlightedText) : Color.appColor(.navigationBarText))
                     .onTapGesture {
                         withAnimation(.easeOut) {
                             selectedTab = item.tab
@@ -61,10 +61,13 @@ struct TabsView: View {
         .frame(width: tabBarWidth, height: tabBarHeight)
         .background(
             CustomShape(xAxis: offsetX + customShapeOffset)
+                .fill(Color.appColor(.navigationBarBackground))
                 .clipShape(.rect(cornerRadius: tabBarCornerRadius))
         )
         .overlay(alignment: .topLeading) {
-            Circle().frame(width: 10, height: 10)
+            Circle()
+                .fill(Color.appColor(.navigationBarBackground))
+                .frame(width: 10, height: 10)
                 .offset(x: customCircleOffset)
                 .offset(x: offsetX)
         }
@@ -73,5 +76,5 @@ struct TabsView: View {
 }
 
 #Preview {
-    TabsView()
+    TabsView(selectedTab: .constant(.home))
 }

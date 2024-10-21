@@ -15,6 +15,8 @@ enum AssetsColor {
     case secondaryBackground
     case tertiaryBackground
     case highlightedText
+    case navigationBarText
+    case navigationBarBackground
 }
 
 extension UIColor {
@@ -33,6 +35,10 @@ extension UIColor {
             return UIColor(named: "TertiaryBackground")
         case .highlightedText:
             return UIColor(named: "Highlights")
+        case .navigationBarBackground:
+            return UIColor(named: "NavigationBarBackground")
+        case .navigationBarText:
+            return UIColor(named: "NavigationBarText")
         }
     }
 }
@@ -52,6 +58,10 @@ extension Color {
             return Color("TertiaryBackground")
         case .highlightedText:
             return Color("Highlights")
+        case .navigationBarText:
+            return Color("NavigationBarText")
+        case .navigationBarBackground:
+            return Color("NavigationBarBackground")
         }
     }
 }

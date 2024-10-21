@@ -13,7 +13,6 @@ struct TabBarShape: View {
     var body: some View {
         ZStack {
             CustomShape(xAxis: xAxis)
-                .foregroundStyle(.pink)
                 .clipShape(RoundedRectangle(cornerRadius: 18))
                 .padding(.vertical)
                 .frame(width: 350, height: 100, alignment: .center)

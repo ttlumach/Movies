@@ -6,29 +6,47 @@
 //
 
 import SwiftUI
+import Combine
 
 struct RootView: View {
     
-    @State var selectedTab: Tab = .home
+    @StateObject var tabsViewModel = TabsViewModel()
+    @State var foldTabNavigation = false
+    @State var homeView: HomeView // saving as @State to save scroll/navigation states
+    var hideTabNavigationSub = PassthroughSubject<Bool, Never>()
+    
+    init() {
+        _homeView = State(initialValue: HomeView(hideTabNavigationSub: hideTabNavigationSub))
+    }
     
     var body: some View {
         ZStack {
-            switch selectedTab {
-            case .home:
-                HomeView()
-            case .favourites:
-                Text("Favourites Tab")
-            case .settings:
-                SettingsView()
+            Group {
+                switch tabsViewModel.selectedTab {
+                case .home:
+                    homeView
+                case .favourites:
+                    Text("Favourites Tab")
+                case .settings:
+                    SettingsView()
+                }
             }
+            .transition(.dynamicSlide(forward: $tabsViewModel.tabTransitionDirectionIsForward))
+            .animation(.default, value: tabsViewModel.selectedTab)
             
             VStack {
                 Spacer()
-                TabsView(selectedTab: $selectedTab)
+                TabsView(viewModel: tabsViewModel, isFolded: $foldTabNavigation)
                     .padding(.bottom)
             }
+            
         }
         .ignoresSafeArea()
+        .onReceive(hideTabNavigationSub) { hide in
+            withAnimation() {
+                foldTabNavigation = hide
+            }
+        }
         
     }
 }

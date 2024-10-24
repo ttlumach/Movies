@@ -1,5 +1,5 @@
 //
-//  CustomShape.swift
+//  TabBarShape.swift
 //  Movies
 //
 //  Created by Macbook on 21.10.2024.

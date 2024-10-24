@@ -8,10 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		614332742CC6B4050093BCEA /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614332732CC6B4050093BCEA /* TabView.swift */; };
-		614332772CC6BD130093BCEA /* CustomShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614332762CC6BD130093BCEA /* CustomShape.swift */; };
+		614332772CC6BD130093BCEA /* TabBarShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614332762CC6BD130093BCEA /* TabBarShape.swift */; };
 		614332792CC6D8C20093BCEA /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614332782CC6D8C20093BCEA /* RootView.swift */; };
 		6143327B2CC6DBE80093BCEA /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6143327A2CC6DBE80093BCEA /* HomeView.swift */; };
 		6143327E2CC6DC7B0093BCEA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6143327D2CC6DC7B0093BCEA /* SettingsView.swift */; };
+		614332802CC79CAF0093BCEA /* AnyTransition+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6143327F2CC79CAF0093BCEA /* AnyTransition+Extension.swift */; };
+		614332822CC79CEC0093BCEA /* TabsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614332812CC79CEC0093BCEA /* TabsViewModel.swift */; };
+		614332842CC79D5B0093BCEA /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614332832CC79D5B0093BCEA /* TabModel.swift */; };
+		614332862CC7A9A80093BCEA /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614332852CC7A9A80093BCEA /* View+Extension.swift */; };
 		6176115C2C5139AA0031072F /* HomeMovieTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6176115E2C5139AA0031072F /* HomeMovieTableViewCell.xib */; };
 		617611622C513A860031072F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 617611642C513A860031072F /* Localizable.strings */; };
 		617611682C51403E0031072F /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617611672C51403E0031072F /* Localizable.swift */; };
@@ -52,10 +56,14 @@
 
 /* Begin PBXFileReference section */
 		614332732CC6B4050093BCEA /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
-		614332762CC6BD130093BCEA /* CustomShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShape.swift; sourceTree = "<group>"; };
+		614332762CC6BD130093BCEA /* TabBarShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarShape.swift; sourceTree = "<group>"; };
 		614332782CC6D8C20093BCEA /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		6143327A2CC6DBE80093BCEA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		6143327D2CC6DC7B0093BCEA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		6143327F2CC79CAF0093BCEA /* AnyTransition+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyTransition+Extension.swift"; sourceTree = "<group>"; };
+		614332812CC79CEC0093BCEA /* TabsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsViewModel.swift; sourceTree = "<group>"; };
+		614332832CC79D5B0093BCEA /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
+		614332852CC7A9A80093BCEA /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		6176115D2C5139AA0031072F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HomeMovieTableViewCell.xib; sourceTree = "<group>"; };
 		6176115F2C5139AA0031072F /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/HomeMovieTableViewCell.xcstrings; sourceTree = "<group>"; };
 		617611632C513A860031072F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -113,7 +121,9 @@
 			isa = PBXGroup;
 			children = (
 				614332732CC6B4050093BCEA /* TabView.swift */,
-				614332762CC6BD130093BCEA /* CustomShape.swift */,
+				614332832CC79D5B0093BCEA /* TabModel.swift */,
+				614332812CC79CEC0093BCEA /* TabsViewModel.swift */,
+				614332762CC6BD130093BCEA /* TabBarShape.swift */,
 			);
 			path = CustomTabBar;
 			sourceTree = "<group>";
@@ -141,7 +151,9 @@
 			isa = PBXGroup;
 			children = (
 				61F021EA2C44E74C00960A62 /* ViewController+Extensions.swift */,
+				614332852CC7A9A80093BCEA /* View+Extension.swift */,
 				61F021E32C43F7F000960A62 /* LazyImageView+Extensions.swift */,
+				6143327F2CC79CAF0093BCEA /* AnyTransition+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -354,9 +366,11 @@
 			files = (
 				617611682C51403E0031072F /* Localizable.swift in Sources */,
 				6176116E2C5180160031072F /* AssetsColors.swift in Sources */,
-				614332772CC6BD130093BCEA /* CustomShape.swift in Sources */,
+				614332772CC6BD130093BCEA /* TabBarShape.swift in Sources */,
 				614332742CC6B4050093BCEA /* TabView.swift in Sources */,
+				614332822CC79CEC0093BCEA /* TabsViewModel.swift in Sources */,
 				614332792CC6D8C20093BCEA /* RootView.swift in Sources */,
+				614332802CC79CAF0093BCEA /* AnyTransition+Extension.swift in Sources */,
 				6143327B2CC6DBE80093BCEA /* HomeView.swift in Sources */,
 				61B5DA0E2C46862D0068E48F /* InternetConnectionManager.swift in Sources */,
 				61F021F72C4525E900960A62 /* UIViewControllerWithSpinner.swift in Sources */,
@@ -370,10 +384,12 @@
 				6143327E2CC6DC7B0093BCEA /* SettingsView.swift in Sources */,
 				61F021D32C3EF83100960A62 /* MovieAPI.swift in Sources */,
 				61F021DA2C42D80100960A62 /* MovieAdditionalDetailsVC.swift in Sources */,
+				614332862CC7A9A80093BCEA /* View+Extension.swift in Sources */,
 				61F021D52C3EF8B400960A62 /* NetworkService.swift in Sources */,
 				61F0219C2C36C34700960A62 /* SceneDelegate.swift in Sources */,
 				61F021CF2C3EF7DC00960A62 /* MovieResponse.swift in Sources */,
 				6176116A2C5143A50031072F /* SettingsViewController.swift in Sources */,
+				614332842CC79D5B0093BCEA /* TabModel.swift in Sources */,
 				61F021CB2C3EF73000960A62 /* HomeMoviesViewModel.swift in Sources */,
 				61F021E42C43F7F000960A62 /* LazyImageView+Extensions.swift in Sources */,
 				617611702C5191440031072F /* SettingsViewControllerViewModel.swift in Sources */,

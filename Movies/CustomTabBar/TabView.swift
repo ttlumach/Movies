@@ -7,24 +7,14 @@
 
 import SwiftUI
 
-enum Tab: String {
-    case home = "Home"
-    case favourites = "Favourites"
-    case settings = "Settings"
-}
-
 struct TabsView: View {
     
-    struct TabBarItem: Identifiable {
-        var id = UUID()
-        var iconName: String
-        var tagIndex: Int
-        var tab: Tab
-    }
-    
-    let tabButtonHeight: CGFloat = 35
+    let tabButtonWidth: CGFloat = 35
     let tabBarHeight: CGFloat = 70
     let tabBarWidth: CGFloat = 350
+    
+    let foldedTabBarHeight: CGFloat = 35
+    let foldedTabBarWidth: CGFloat = 50
     
     // If you will add more or less than 3 tabs you must change this vars
     let customShapeOffset: CGFloat = 40
@@ -32,49 +22,74 @@ struct TabsView: View {
     let tabBarCornerRadius: CGFloat = 12
     let offsetMultiplier: Int = 105
     
-    @Binding var selectedTab: Tab
     @State var offsetX: CGFloat = 0
-    
-    @State var tabItems = [
-        TabBarItem(iconName: "house.fill", tagIndex: 0, tab: .home),
-        TabBarItem(iconName: "heart.fill", tagIndex: 1, tab: .favourites),
-        TabBarItem(iconName: "gearshape", tagIndex: 2, tab: .settings)
-    ]
+    @ObservedObject var viewModel: TabsViewModel
+    @Binding var isFolded: Bool
     
     var body: some View {
         Spacer()
-        HStack {
-            ForEach(tabItems) { item in
-                Spacer()
-                Image(systemName: item.iconName)
-                    .foregroundStyle(selectedTab == item.tab ? Color.appColor(.highlightedText) : Color.appColor(.navigationBarText))
-                    .onTapGesture {
-                        withAnimation(.easeOut) {
-                            selectedTab = item.tab
-                            offsetX = CGFloat(item.tagIndex * offsetMultiplier)
+        if !isFolded {
+            HStack {
+                ForEach(Tab.allCases) { tab in
+                    Spacer()
+                    Image(systemName: tab.iconName)
+                        .foregroundStyle(viewModel.selectedTab.tagIndex == tab.tagIndex ? Color.appColor(.highlightedText) : Color.appColor(.navigationBarText))
+                        .onTapGesture {
+                            withAnimation(.easeIn) {
+                                viewModel.selectedTab = tab
+                                offsetX = CGFloat(tab.tagIndex * offsetMultiplier)
+                            }
                         }
-                    }
-                Spacer()
+                    Spacer()
+                }
+                .frame(width: tabButtonWidth)
             }
-            .frame(width: tabButtonHeight)
-        }
-        .frame(width: tabBarWidth, height: tabBarHeight)
-        .background(
-            CustomShape(xAxis: offsetX + customShapeOffset)
-                .fill(Color.appColor(.navigationBarBackground))
-                .clipShape(.rect(cornerRadius: tabBarCornerRadius))
-        )
-        .overlay(alignment: .topLeading) {
-            Circle()
-                .fill(Color.appColor(.navigationBarBackground))
-                .frame(width: 10, height: 10)
-                .offset(x: customCircleOffset)
-                .offset(x: offsetX)
+            .frame(width: tabBarWidth, height: tabBarHeight)
+            .background(
+                CustomShape(xAxis: offsetX + customShapeOffset)
+                    .fill(Color.appColor(.navigationBarBackground))
+                    .clipShape(.rect(cornerRadius: tabBarCornerRadius))
+            )
+            .overlay(alignment: .topLeading) {
+                Circle()
+                    .fill(Color.appColor(.navigationBarBackground))
+                    .frame(width: 10, height: 10)
+                    .offset(x: customCircleOffset)
+                    .offset(x: offsetX)
+            }
+            .transition(
+                .asymmetric(insertion: .move(edge: .bottom).animation(.default.delay(1)),
+                            removal: .move(edge: .bottom)))
+        } else {
+            HStack {
+                Spacer()
+                Image(systemName: "chevron.up")
+                    .foregroundStyle(Color.appColor(.navigationBarText))
+                    .frame(width: foldedTabBarWidth, height: foldedTabBarHeight)
+                    .background(
+                        Rectangle()
+                            .fill(Color.appColor(.navigationBarBackground))
+                            .clipShape(.rect(cornerRadius: tabBarCornerRadius))
+                    )
+                    .padding(.trailing)
+            }
+            .onTapGesture {
+                withAnimation(.easeIn) {
+                    isFolded.toggle()
+                }
+            }
+            .transition(
+                .asymmetric(
+                    insertion: .move(edge: .bottom).animation(.default.delay(5)),
+                    removal: .move(edge: .bottom)
+                )
+            )
         }
     }
     
 }
 
+
 #Preview {
-    TabsView(selectedTab: .constant(.home))
+    TabsView(viewModel: TabsViewModel(), isFolded: .constant(false))
 }

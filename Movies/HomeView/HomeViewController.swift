@@ -6,7 +6,9 @@
 //
 
 import UIKit
+import SwiftUI
 import SnapKit
+import Combine
 
 class HomeViewController: UIViewControllerWithSpinner {
     
@@ -20,10 +22,9 @@ class HomeViewController: UIViewControllerWithSpinner {
     }()
     
     var viewModel: HomeMoviesViewModel = HomeMoviesViewModel()
+    var hideTabNavigationSub: PassthroughSubject<Bool, Never>?
     
     private var sortBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "line.3.horizontal.decrease")?.withTintColor(.secondaryText, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
-    
-    private var settingsBarButtonItem: UIBarButtonItem = UIBarButtonItem(image: .init(systemName: "gearshape")?.withTintColor(.secondaryText, renderingMode: .alwaysOriginal), style: .plain, target: nil , action: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +41,10 @@ class HomeViewController: UIViewControllerWithSpinner {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        hideTabNavigationSub?.send(false)
+    }
+    
     private func setupUI() {
         view.addSubview(tableView)
         tableView.delegate = self
@@ -54,10 +59,7 @@ class HomeViewController: UIViewControllerWithSpinner {
         
         title = LocalizedString.popularMovies
         sortBarButtonItem.target = self
-        settingsBarButtonItem.target = self
-        settingsBarButtonItem.action = #selector(showSettings)
         navigationItem.rightBarButtonItem = sortBarButtonItem
-        navigationItem.leftBarButtonItem = settingsBarButtonItem
     }
     
     private func setupSearchController() {
@@ -78,12 +80,6 @@ class HomeViewController: UIViewControllerWithSpinner {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         tableView.refreshControl = refreshControl
-    }
-    
-    @objc private func showSettings() {
-        let vc = SettingsViewController()
-        
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func handleMoviesUpdate() {
@@ -206,6 +202,7 @@ extension HomeViewController: UITableViewDataSource {
         vc.viewModel = cellViewModel
         
         navigationController?.pushViewController(vc, animated: true)
+        hideTabNavigationSub?.send(true)
     }
 }
 

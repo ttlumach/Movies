@@ -51,7 +51,6 @@
 		61F021EF2C44F85E00960A62 /* YoutubePlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F021EE2C44F85E00960A62 /* YoutubePlayerVC.swift */; };
 		61F021F12C45064100960A62 /* FullScreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F021F02C45064100960A62 /* FullScreenImageViewController.swift */; };
 		61F021F42C45070300960A62 /* ImageScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 61F021F32C45070300960A62 /* ImageScrollView */; };
-		61F021F72C4525E900960A62 /* UIViewControllerWithSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F021F62C4525E900960A62 /* UIViewControllerWithSpinner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -97,7 +96,6 @@
 		61F021EC2C44EC4F00960A62 /* MovieVideoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieVideoResponse.swift; sourceTree = "<group>"; };
 		61F021EE2C44F85E00960A62 /* YoutubePlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubePlayerVC.swift; sourceTree = "<group>"; };
 		61F021F02C45064100960A62 /* FullScreenImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImageViewController.swift; sourceTree = "<group>"; };
-		61F021F62C4525E900960A62 /* UIViewControllerWithSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerWithSpinner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,7 +267,6 @@
 			isa = PBXGroup;
 			children = (
 				61F021D92C42D80100960A62 /* MovieAdditionalDetailsVC.swift */,
-				61F021F62C4525E900960A62 /* UIViewControllerWithSpinner.swift */,
 				61F021F02C45064100960A62 /* FullScreenImageViewController.swift */,
 				61F021EE2C44F85E00960A62 /* YoutubePlayerVC.swift */,
 			);
@@ -373,7 +370,6 @@
 				614332802CC79CAF0093BCEA /* AnyTransition+Extension.swift in Sources */,
 				6143327B2CC6DBE80093BCEA /* HomeView.swift in Sources */,
 				61B5DA0E2C46862D0068E48F /* InternetConnectionManager.swift in Sources */,
-				61F021F72C4525E900960A62 /* UIViewControllerWithSpinner.swift in Sources */,
 				61F021D12C3EF7E500960A62 /* MovieModel.swift in Sources */,
 				61F0219E2C36C34700960A62 /* HomeViewController.swift in Sources */,
 				61F021E22C43D77300960A62 /* MovieViewModel.swift in Sources */,

@@ -9,7 +9,7 @@ import UIKit
 import NukeUI
 import Nuke
 import SnapKit
-class MovieAdditionalDetailsVC: UIViewControllerWithSpinner {
+class MovieAdditionalDetailsVC: UIViewController {
     
     var viewModel: MovieViewModel?
     

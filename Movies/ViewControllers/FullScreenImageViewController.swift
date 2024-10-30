@@ -10,7 +10,7 @@ import ImageScrollView
 import SnapKit
 import Nuke
 
-class FullScreenImageViewController: UIViewControllerWithSpinner {
+class FullScreenImageViewController: UIViewController {
     
     private var imageScrollView = ImageScrollView()
     private var image: UIImage?
@@ -50,19 +50,16 @@ class FullScreenImageViewController: UIViewControllerWithSpinner {
     }
     
     func getImage(url: URL) {
-        startSpinner()
         task = Task(priority: .userInitiated) {
             do {
                 let imagePipeline = ImagePipeline(configuration: .withDataCache)
                 let image = try await imagePipeline.image(for: url)
                 await MainActor.run { [weak self] in
-                    self?.stopSpinner()
                     self?.image = image
                     self?.imageScrollView.display(image: image)
                 }
             } catch {
                 await MainActor.run { [weak self] in
-                    self?.stopSpinner()
                     self?.displayErrorAlert(error: NetworkError.cantLoadImage)
                 }
             }

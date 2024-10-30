@@ -21,6 +21,5 @@ class TabsViewModel: ObservableObject {
                 return self.selectedTab.tagIndex < $0.tagIndex
             }
             .assign(to: &$tabTransitionDirectionIsForward)
-                
     }
 }

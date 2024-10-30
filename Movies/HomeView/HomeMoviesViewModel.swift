@@ -33,6 +33,7 @@ class HomeMoviesViewModel {
     var onErrorMessage: ((Error) -> Void)?
     
     weak var delegate: HomeMoviesViewModelDelegate?
+    var isDownloading = false
     
     private(set) var popularMovies: [MovieModel] = [] {
         didSet {
@@ -67,7 +68,7 @@ class HomeMoviesViewModel {
         }
     }
     
-    var onLastPage: Bool {
+    private var onLastPage: Bool {
         if delegate?.inSearchMode() == true {
             return searchedMoviesNextPageToFetch > searchedMoviesLastPage
         } else {
@@ -103,7 +104,10 @@ class HomeMoviesViewModel {
     }
     
     func fetchMoviesByPopularity() {
+        guard !isDownloading else { return }
         guard popularMoviesNextPageToFetch <= popularMoviesLastPage else { return }
+        
+        isDownloading = true
         api.fetchPopularMoviesbyPage(page: popularMoviesNextPageToFetch) { [weak self] result in
             switch result {
             case .success(let response):
@@ -113,11 +117,15 @@ class HomeMoviesViewModel {
             case .failure(let error):
                 self?.onErrorMessage?(error)
             }
+            self?.isDownloading = false
         }
     }
     
     func fetchMoviesBySearchText(searchText: String) {
+        guard !isDownloading else { return }
         guard searchedMoviesNextPageToFetch <= searchedMoviesLastPage else { return }
+        
+        isDownloading = true
         api.fetchMoviesbySearchText(page: searchedMoviesNextPageToFetch, searchText: searchText) { [weak self] result in
             switch result {
             case .success(let response):
@@ -127,6 +135,7 @@ class HomeMoviesViewModel {
             case .failure(let error):
                 self?.onErrorMessage?(error)
             }
+            self?.isDownloading = false
         }
     }
     
@@ -149,6 +158,8 @@ class HomeMoviesViewModel {
 extension HomeMoviesViewModel {
     
     public func loadNextPage() {
+        guard !onLastPage else { return }
+        
         if delegate?.inSearchMode() == true {
             fetchMoviesBySearchText(searchText: lastSearchText)
         } else {

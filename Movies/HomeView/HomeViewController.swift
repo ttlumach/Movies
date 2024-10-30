@@ -10,7 +10,7 @@ import SwiftUI
 import SnapKit
 import Combine
 
-class HomeViewController: UIViewControllerWithSpinner {
+class HomeViewController: UIViewController{
     
     private let emptyResultsText = LocalizedString.noResultsForQuery
     private let searchController: UISearchController = UISearchController(searchResultsController: nil)
@@ -36,7 +36,6 @@ class HomeViewController: UIViewControllerWithSpinner {
         }
         
         viewModel.onErrorMessage = { [weak self] error in
-            self?.stopSpinner()
             self?.displayErrorAlert(error: error)
         }
     }
@@ -49,6 +48,7 @@ class HomeViewController: UIViewControllerWithSpinner {
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.prefetchDataSource = self
         tableView.separatorStyle = .none
         tableView.snp.makeConstraints { make in
             make.bottom.trailing.top.leading.equalToSuperview()
@@ -98,7 +98,6 @@ class HomeViewController: UIViewControllerWithSpinner {
                 sSelf.tableView.backgroundView = nil
             }
             sSelf.tableView.reloadData()
-            sSelf.stopSpinner()
         }
     }
     
@@ -184,10 +183,7 @@ extension HomeViewController: UITableViewDataSource {
         // - for fetch more on scroll
         if let visiblePaths = tableView.indexPathsForVisibleRows,
            visiblePaths.contains([0, viewModel.filteredMovies.count - 1]) {
-            if !viewModel.onLastPage {
-                viewModel.loadNextPage()
-                startSpinner()
-            }
+            viewModel.loadNextPage()
         }
         
         return cell
@@ -203,6 +199,21 @@ extension HomeViewController: UITableViewDataSource {
         
         navigationController?.pushViewController(vc, animated: true)
         hideTabNavigationSub?.send(true)
+    }
+}
+
+// MARK: -Prefectch
+
+extension HomeViewController: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        if let visiblePaths = tableView.indexPathsForVisibleRows,
+           visiblePaths.contains([0, viewModel.filteredMovies.count - 20]) {
+            viewModel.loadNextPage()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+        //
     }
 }
 
